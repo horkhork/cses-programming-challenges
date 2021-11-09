@@ -19,14 +19,13 @@ fn main() {
 
         let m = cmp::max(x, y);
         let d = (m * (m - 1)) + 1;
-        //println!("{} {} diagonal {}", y, x, d);
         
-        let o = if x > y {
-            d + (x - y)
+        let o = if m % 2 == 0 {
+            d - (x - y)
         } else {
-            d + (y - x)
+            d + (x - y)
         };
-        //println!("o {}", o);
+        //println!("{} {} Max {} diagonal {} o {}", y, x, m, d, o);
         println!("{}", o);
 
     };
