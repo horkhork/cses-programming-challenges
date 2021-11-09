@@ -6,13 +6,13 @@ fn main() {
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
     let mut split = line.split_whitespace();
-    let _: i64 = split.next().unwrap().parse().unwrap();
-    let x: i64 = split.next().unwrap().parse().unwrap();
+    let _: i32 = split.next().unwrap().parse().unwrap();
+    let x: i32 = split.next().unwrap().parse().unwrap();
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
     let children = line.split_whitespace();
-    let mut children = children.map(|x| Some(x.parse::<i64>().unwrap())).collect::<Vec<Option<i64>>>();
+    let mut children = children.map(|x| Some(x.parse::<i32>().unwrap())).collect::<Vec<Option<i32>>>();
     children.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
     //println!("children {:?}", children);

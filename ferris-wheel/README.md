@@ -29,3 +29,11 @@ Input:
 Output:
 3
 
+
+Got a working implementation but it's slow for the large test inputs. Using
+flamegraph to see if I can find out where the slowness is
+
+```bash
+cargo install flamegraph
+
+```
