@@ -12,60 +12,32 @@ fn main() {
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
     let children = line.split_whitespace();
-    let mut children = children.map(|x| x.parse::<i64>().unwrap()).collect::<Vec<i64>>();
+    let mut children = children.map(|x| Some(x.parse::<i64>().unwrap())).collect::<Vec<Option<i64>>>();
     children.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
+    //println!("children {:?}", children);
 
+    let len = children.len();
     let mut gondolas = 0;
-    while children.len() > 0 {
-        gondolas += 1;
-        let small = children.remove(0);
-        if children.len() == 0 {
-            break;
+    for i in 0..len {
+        if children[i].is_none() {
+            continue;
         }
-        let mut i = children.len() - 1;
-        let _it = loop {
-            if i < 0 {
-                break None;
-            };
-
-            if small + children[i] <= x {
-                let ret = Some(children[i]);
-                children.remove(i);
-                break ret;
+        gondolas += 1;
+        let curr = children[i].unwrap();
+        children[i] = None;
+        //println!("curr {}", curr);
+        for j in (i..len).rev() {
+            if children[j].is_none() {
+                continue;
             }
-
-            //println!("small {} i {} {}", small, i, children[i]);
-            if i == 0 {
-                break None;
-            };
-            i -= 1;
-        };
-        //println!("{} it {:?}", gondolas, _it);
+            //println!("curr {} new {}", curr, children[j].unwrap());
+            if curr + children[j].unwrap() <= x {
+                children[j] = None;
+                break;
+            }
+        }
     }
-
-    ////println!("{:?}", children);
-    //let mut weight = 0;
-    //let mut num_riders = 0;
-    //while children.len() > 0 {
-    //    //println!("here");
-    //    if (weight + children[children.len() - 1]) <= x && num_riders < 2 {
-    //        //println!("in");
-    //        let child_weight = children.pop().unwrap();
-    //        weight += child_weight;
-    //        if num_riders == 0 {
-    //            //println!("new gondola {}", child_weight);
-    //            gondolas += 1;
-    //        } else {
-    //            //println!("add to gondola {}", child_weight);
-    //        }
-    //        num_riders += 1;
-    //    } else {
-    //        weight = 0;
-    //        num_riders = 0;
-    //        //println!("not {}", gondolas);
-    //    };
-    //}
 
     println!("{}", gondolas);
 }
