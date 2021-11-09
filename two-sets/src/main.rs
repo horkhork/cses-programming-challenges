@@ -14,25 +14,46 @@ fn main() {
         return;
     }
 
-    let half = sum / 2;
-    println!("{}", half);
+    let half: i64 = sum / 2;
 
-    let mut nums: Vec<i64> = (0..=n).collect();
-    nums.reverse();
+    let all_nums: Vec<i64> = (0..=n).collect();
+    //println!("{:?}", all_nums);
+    let mut first_set: Vec<i64> = Vec::new();
     let mut sum = 0;
-    println!("{:?}", nums);
-    let mut tally: Vec<i64> = Vec::new();
-    for num in nums {
+    for num in all_nums.iter().rev() {
         if sum + num <= half {
             sum += num;
-            tally.push(num);
+            first_set.push(*num);
         };
         if sum == half {
-            println!("found it {} {:?}", sum, tally);
-            return;
+            //println!("found it {} {:?}", sum, first_set);
+            break;
         }
     };
-    println!("NO");
+    if sum != half || first_set.len() == 0 {
+        println!("NO");
+        return;
+    }
+
+    println!("YES");
+
+    println!("{}", first_set.len());
+    println!("{}", first_set.iter().rev().map(|x| x.to_string()).collect::<Vec<String>>().join(" "));
+    let mut all_nums: Vec<Option<i64>> = all_nums
+        .iter()
+        .map(|x| if x > &0 {
+            Some(*x)
+        } else {
+            None
+        })
+        .collect();
+    for i in first_set {
+        //println!("remove {}", i.to_string());
+        all_nums[i as usize] = None;
+    };
+    let rest: Vec<i64> = all_nums.iter().filter(|x| x.is_some()).map(|x| x.unwrap()).collect();
+    println!("{}", rest.len());
+    println!("{}", rest.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(" "));
 }
 
 fn permute(n: i64) -> i64 {
