@@ -29,7 +29,7 @@ fn main() {
             //println!("found it {} {:?}", sum, first_set);
             break;
         }
-    };
+    }
     if sum != half || first_set.len() == 0 {
         println!("NO");
         return;
@@ -38,22 +38,36 @@ fn main() {
     println!("YES");
 
     println!("{}", first_set.len());
-    println!("{}", first_set.iter().rev().map(|x| x.to_string()).collect::<Vec<String>>().join(" "));
+    println!(
+        "{}",
+        first_set
+            .iter()
+            .rev()
+            .map(|x| x.to_string())
+            .collect::<Vec<String>>()
+            .join(" ")
+    );
     let mut all_nums: Vec<Option<i64>> = all_nums
         .iter()
-        .map(|x| if x > &0 {
-            Some(*x)
-        } else {
-            None
-        })
+        .map(|x| if x > &0 { Some(*x) } else { None })
         .collect();
     for i in first_set {
         //println!("remove {}", i.to_string());
         all_nums[i as usize] = None;
-    };
-    let rest: Vec<i64> = all_nums.iter().filter(|x| x.is_some()).map(|x| x.unwrap()).collect();
+    }
+    let rest: Vec<i64> = all_nums
+        .iter()
+        .filter(|x| x.is_some())
+        .map(|x| x.unwrap())
+        .collect();
     println!("{}", rest.len());
-    println!("{}", rest.iter().map(|x| x.to_string()).collect::<Vec<String>>().join(" "));
+    println!(
+        "{}",
+        rest.iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<String>>()
+            .join(" ")
+    );
 }
 
 fn permute(n: i64) -> i64 {
