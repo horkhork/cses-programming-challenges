@@ -14,16 +14,17 @@ fn main() {
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    let tickets = line.split_whitespace();
-    let tickets = tickets.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
+    //let tickets = line.split_whitespace();
+    //let tickets = tickets.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
     let mut ticket_prices = HashSet::new();
 
     let mut tik_map = HashMap::new();
-    for tik in tickets.iter() {
+    for tik in line.split_whitespace() {
+        let tik = tik.parse::<i32>().unwrap();
         //println!("tik {}", tik);
         let cnt = tik_map.entry(tik).or_insert(0);
         *cnt += 1;
-        ticket_prices.insert(*tik);
+        ticket_prices.insert(tik);
     }
     let mut ticket_prices: Vec<&i32> = ticket_prices.iter().collect();
     ticket_prices.sort_by(|a, b| a.partial_cmp(b).unwrap());
@@ -33,22 +34,24 @@ fn main() {
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    let customers = line.split_whitespace();
-    let customers = customers.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
+    //let customers = line.split_whitespace();
+    //let customers = customers.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
     //println!("customers {:?}", customers);
 
-    for c in customers {
+    for c in line.split_whitespace() {
+        let c = c.parse::<i32>().unwrap();
+
         //println!("Customer max {}", c);
 
         //println!("tickets {:?}", tik_map);
-        let mut val = &-1;
+        let mut val = -1;
         //for t in &ticket_prices {
 
         let mut i = 0;
         loop {
             if i == len {
                 //println!("fell off the end");
-                tik_map.entry(&val).and_modify(|x| { *x -= 1 });
+                tik_map.entry(val).and_modify(|x| { *x -= 1 });
                 break;
             }
             let t = &ticket_prices[i];
@@ -60,8 +63,8 @@ fn main() {
             //
             // Ticket price is exact match of customer max, return it
             if **t == c {
-                val = *t;
-                tik_map.entry(&val).and_modify(|x| { *x -= 1 });
+                val = **t;
+                tik_map.entry(val).and_modify(|x| { *x -= 1 });
                 //println!("found it {}", t);
                 break;
             }
@@ -69,12 +72,12 @@ fn main() {
             // Ticket price is less than customer max, record the value but go on
             if **t < c {
                 // Keep track of the previous ticket price customer would buy
-                val = *t;
+                val = **t;
                 //println!("found one {}", t);
 
             // Ticket price exceeds customer match, return previous
             } else {
-                tik_map.entry(&val).and_modify(|x| { *x -= 1 });
+                tik_map.entry(val).and_modify(|x| { *x -= 1 });
                 //println!("break with prev {}", val);
                 break;
             }
