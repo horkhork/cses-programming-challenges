@@ -49,5 +49,5 @@ perf
 CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph ./target/release/ferris-wheel < index.html
 ```
 
-Need to follow up getting perf to work, instead, I eliminated the nested loop by
-using to list indexes, one from the front and one from the end.
+Need to follow up getting perf to work, instead, I optimized the nested loop by
+using two list indexes, one from the front and one from the end.
