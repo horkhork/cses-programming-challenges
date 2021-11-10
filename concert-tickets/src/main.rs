@@ -14,61 +14,54 @@ fn main() {
     let tickets = line.split_whitespace();
     let mut tickets = tickets.map(|x| Some(x.parse::<i32>().unwrap())).collect::<Vec<Option<i32>>>();
     tickets.sort_by(|a, b| a.partial_cmp(b).unwrap());
-    println!("tickets {:?}", tickets);
+    //println!("tickets {:?}", tickets);
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
     let customers = line.split_whitespace();
-    let customers = customers.map(|x| Some(x.parse::<i32>().unwrap())).collect::<Vec<Option<i32>>>();
-    println!("customers {:?}", customers);
+    let customers = customers.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
+    //println!("customers {:?}", customers);
 
-    let mut i = 0;
-    let mut j = 0;
-    loop {
-        if j >= customers.len() {
-            break;
-        }
-        // customers max price
-        let m = customers[j].unwrap();
-        println!("Customer max {}", m);
+    for c in customers {
+        //println!("Customer max {}", c);
 
-        loop {
-            let mut val = -1;
+        let mut val = -1;
+        let mut prev = 0;
+        let mut i = 0;
+        let val = loop {
             if i >= tickets.len() {
-                println!("{}", val);
-                break;
+                tickets[prev] = None;
+                //println!("fell off the end");
+                break val;
             }
-            // Current ticket price
-            let t = tickets[j].unwrap();
-            println!("curr tik {}", t);
 
-            if t <= m {
+            if tickets[i].is_none() {
+                i += 1;
+                continue;
+            }
+
+            // Current ticket price
+            let t = tickets[i].unwrap();
+            //println!("curr tik {}", t);
+
+            if t < c {
                 // Keep track of the previous ticket price customer would buy
+                prev = i;
                 val = t;
+                //println!("found one {}", t);
+            } else if t == c {
+                tickets[i] = None;
+                //println!("found it {}", t);
+                break t;
+            } else {
+                tickets[prev] = None;
+                //println!("break with prev {}", val);
+                break val;
             }
 
             i += 1;
-            //if customers[j] < tickets[i] {
-            //    println!("LessEq {} {} {} {}", j, customers[j].unwrap(), i, tickets[i].unwrap());
-            //    i += 1;
-            //} else if customers[j] >= tickets[i] {
-            //    println!("Found One {} {} {} {}", j, customers[j].unwrap(), i, tickets[i].unwrap());
-            //    println!("{}", tickets[j].unwrap());
-            //    i += 1;
-            //    break;
-            //} else {
-            //    println!("More {} {} {} {}", j, customers[j].unwrap(), i, tickets[i].unwrap());
-            //    if i == 0 {
-            //        println!("At zero");
-            //        break
-            //    }
-            //    i -= 1;
-            //    println!("{}", tickets[i].unwrap());
-            //    break;
-            //}
-        }
-
-        j += 1;
+        };
+        println!("{}", val);
     }
 }
 
