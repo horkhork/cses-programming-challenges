@@ -24,24 +24,50 @@ fn main() {
 
     let mut i = 0;
     let mut j = 0;
-    let mut highwater = 0;
     loop {
         if j >= customers.len() {
             break;
         }
+        // customers max price
+        let m = customers[j].unwrap();
+        println!("Customer max {}", m);
+
         loop {
+            let mut val = -1;
             if i >= tickets.len() {
-                println!("-1");
+                println!("{}", val);
                 break;
             }
-            if customers[j] >= tickets[i] {
-                highwater = tickets[i].unwrap();
-                println!("{}", highwater);
-            i += 1;
-                break;
+            // Current ticket price
+            let t = tickets[j].unwrap();
+            println!("curr tik {}", t);
+
+            if t <= m {
+                // Keep track of the previous ticket price customer would buy
+                val = t;
             }
+
             i += 1;
+            //if customers[j] < tickets[i] {
+            //    println!("LessEq {} {} {} {}", j, customers[j].unwrap(), i, tickets[i].unwrap());
+            //    i += 1;
+            //} else if customers[j] >= tickets[i] {
+            //    println!("Found One {} {} {} {}", j, customers[j].unwrap(), i, tickets[i].unwrap());
+            //    println!("{}", tickets[j].unwrap());
+            //    i += 1;
+            //    break;
+            //} else {
+            //    println!("More {} {} {} {}", j, customers[j].unwrap(), i, tickets[i].unwrap());
+            //    if i == 0 {
+            //        println!("At zero");
+            //        break
+            //    }
+            //    i -= 1;
+            //    println!("{}", tickets[i].unwrap());
+            //    break;
+            //}
         }
+
         j += 1;
     }
 }
