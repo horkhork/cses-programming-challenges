@@ -57,17 +57,21 @@ fn main() {
                 //println!("Zero left for {}", t);
                 continue;
             }
+            //
+            // Ticket price is exact match of customer max, return it
+            if **t == c {
+                val = *t;
+                tik_map.entry(&val).and_modify(|x| { *x -= 1 });
+                //println!("found it {}", t);
+                break;
+            }
+
             // Ticket price is less than customer max, record the value but go on
             if **t < c {
                 // Keep track of the previous ticket price customer would buy
                 val = *t;
                 //println!("found one {}", t);
-            // Ticket price is exact match of customer max, return it
-            } else if **t == c {
-                val = *t;
-                tik_map.entry(&val).and_modify(|x| { *x -= 1 });
-                //println!("found it {}", t);
-                break;
+
             // Ticket price exceeds customer match, return previous
             } else {
                 tik_map.entry(&val).and_modify(|x| { *x -= 1 });
