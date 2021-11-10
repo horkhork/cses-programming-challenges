@@ -14,8 +14,6 @@ fn main() {
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    //let tickets = line.split_whitespace();
-    //let tickets = tickets.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
     let mut ticket_prices = HashSet::new();
 
     let mut tik_map = HashMap::new();
@@ -34,19 +32,14 @@ fn main() {
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    //let customers = line.split_whitespace();
-    //let customers = customers.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
     //println!("customers {:?}", customers);
 
     for c in line.split_whitespace() {
         let c = c.parse::<i32>().unwrap();
-
         //println!("Customer max {}", c);
 
         //println!("tickets {:?}", tik_map);
         let mut val = -1;
-        //for t in &ticket_prices {
-
         let mut i = 0;
         loop {
             if i == len {
@@ -55,12 +48,12 @@ fn main() {
                 break;
             }
             let t = &ticket_prices[i];
-            i += 1;
             if tik_map.get(t).unwrap() <= &0 {
                 //println!("Zero left for {}", t);
                 continue;
             }
-            //
+            i += 1;
+            
             // Ticket price is exact match of customer max, return it
             if **t == c {
                 val = **t;
