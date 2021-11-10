@@ -37,3 +37,17 @@ flamegraph to see if I can find out where the slowness is
 cargo install flamegraph
 
 ```
+
+Getting perf working on Mac was a quick dead end, switch to Ubuntu box
+```bash
+sudo apt update\n
+sudo apt install linux-tools-common\n
+uname -r\n
+sudo apt-get install linux-tools-4.15.0-140
+sudo apt install linux-tools-generic linux-tools-4.15.0-140-generic
+perf
+CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph ./target/release/ferris-wheel < index.html
+```
+
+Need to follow up getting perf to work, instead, I eliminated the nested loop by
+using to list indexes, one from the front and one from the end.
