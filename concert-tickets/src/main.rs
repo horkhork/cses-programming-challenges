@@ -23,7 +23,7 @@ fn main() {
     //println!("customers {:?}", customers);
 
     for c in customers {
-        //println!("Customer max {}", c);
+        println!("Customer max {}", c);
 
         let mut val = -1;
         let mut prev = 0;
@@ -31,7 +31,7 @@ fn main() {
         let val = loop {
             if i >= tickets.len() {
                 tickets[prev] = None;
-                //println!("fell off the end");
+                println!("fell off the end");
                 break val;
             }
 
@@ -42,20 +42,20 @@ fn main() {
 
             // Current ticket price
             let t = tickets[i].unwrap();
-            //println!("curr tik {}", t);
+            println!("curr tik {}", t);
 
             if t < c {
                 // Keep track of the previous ticket price customer would buy
                 prev = i;
                 val = t;
-                //println!("found one {}", t);
+                println!("found one {}", t);
             } else if t == c {
                 tickets[i] = None;
-                //println!("found it {}", t);
+                println!("found it {}", t);
                 break t;
             } else {
                 tickets[prev] = None;
-                //println!("break with prev {}", val);
+                println!("break with prev {}", val);
                 break val;
             }
 
