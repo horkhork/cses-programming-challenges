@@ -1,4 +1,7 @@
 use std::io::{BufRead, BufReader};
+use std::collections::HashMap;
+use std::collections::HashSet;
+
 //use std::cmp;
 
 fn main() {
@@ -12,9 +15,20 @@ fn main() {
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
     let tickets = line.split_whitespace();
-    let mut tickets = tickets.map(|x| Some(x.parse::<i32>().unwrap())).collect::<Vec<Option<i32>>>();
-    tickets.sort_by(|a, b| a.partial_cmp(b).unwrap());
-    //println!("tickets {:?}", tickets);
+    let tickets = tickets.map(|x| x.parse::<i32>().unwrap()).collect::<Vec<i32>>();
+    let mut ticket_prices = HashSet::new();
+    
+    let mut tik_map = HashMap::new();
+    for tik in tickets.iter() {
+        //println!("tik {}", tik);
+        let cnt = tik_map.entry(tik).or_insert(0);
+        *cnt += 1;
+        ticket_prices.insert(*tik);
+    }
+    let mut ticket_prices: Vec<&i32> = ticket_prices.iter().collect();
+    ticket_prices.sort_by(|a, b| a.partial_cmp(b).unwrap());
+    //println!("tickets_prices {:?}", ticket_prices);
+    //println!("tickets {:?}", tik_map);
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
@@ -23,44 +37,32 @@ fn main() {
     //println!("customers {:?}", customers);
 
     for c in customers {
-        println!("Customer max {}", c);
+        //println!("Customer max {}", c);
 
-        let mut val = -1;
-        let mut prev = 0;
-        let mut i = 0;
-        let val = loop {
-            if i >= tickets.len() {
-                tickets[prev] = None;
-                println!("fell off the end");
-                break val;
-            }
-
-            if tickets[i].is_none() {
-                i += 1;
+        let mut val = &-1;
+        for t in &ticket_prices {
+            if tik_map.get(t).unwrap() <= &0 {
+                //println!("Zero left for {}", t);
                 continue;
             }
-
-            // Current ticket price
-            let t = tickets[i].unwrap();
-            println!("curr tik {}", t);
-
-            if t < c {
+            // Ticket price is less than customer max, record the value but go on
+            if **t < c {
                 // Keep track of the previous ticket price customer would buy
-                prev = i;
-                val = t;
-                println!("found one {}", t);
-            } else if t == c {
-                tickets[i] = None;
-                println!("found it {}", t);
-                break t;
+                val = *t;
+                //println!("found one {}", t);
+            // Ticket price is exact match of customer max, return it
+            } else if **t == c {
+                val = *t;
+                tik_map.entry(t).and_modify(|i| { *i -= 1 });
+                //println!("found it {}", t);
+                break;
+            // Ticket price exceeds customer match, return previous
             } else {
-                tickets[prev] = None;
-                println!("break with prev {}", val);
-                break val;
+                tik_map.entry(&val).and_modify(|i| { *i -= 1 });
+                //println!("break with prev {}", val);
+                break;
             }
-
-            i += 1;
-        };
+        }
         println!("{}", val);
     }
 }
