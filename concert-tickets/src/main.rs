@@ -14,8 +14,11 @@ fn main() {
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
+
+    // HashSet of unique ticket prices
     let mut ticket_prices = HashSet::new();
 
+    // Keep track of ticket prices and the number of times each price occurs
     let mut tik_map = HashMap::new();
     for tik in line.split_whitespace() {
         let tik = tik.parse::<i32>().unwrap();
@@ -36,10 +39,13 @@ fn main() {
 
     for c in line.split_whitespace() {
         let c = c.parse::<i32>().unwrap();
+
         //println!("Customer max {}", c);
 
         //println!("tickets {:?}", tik_map);
         let mut val = -1;
+        let mut prev = &&-1;
+
         let mut i = 0;
         loop {
             if i == len {
@@ -48,12 +54,16 @@ fn main() {
                 break;
             }
             let t = &ticket_prices[i];
+            i += 1;
+            if t == prev {
+                continue
+            }
+            prev = t;
             if tik_map.get(t).unwrap() <= &0 {
                 //println!("Zero left for {}", t);
                 continue;
             }
-            i += 1;
-            
+
             // Ticket price is exact match of customer max, return it
             if **t == c {
                 val = **t;
@@ -78,4 +88,3 @@ fn main() {
         println!("{}", val);
     }
 }
-
