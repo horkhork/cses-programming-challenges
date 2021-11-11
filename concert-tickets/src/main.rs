@@ -37,48 +37,49 @@ fn main() {
     input.read_line(&mut line).unwrap();
     //println!("customers {:?}", customers);
 
-    for customer_max in line.split_whitespace() {
-        let customer_max = customer_max.parse::<i32>().unwrap();
-        //println!("Customer max {}", customer_max);
+    for c in line.split_whitespace() {
+        let c = c.parse::<i32>().unwrap();
+
+        //println!("Customer max {}", c);
 
         //println!("tickets {:?}", tik_map);
-        let mut curr_price_to_pay = -1;
-        let mut idx = 0;
+        let mut val = -1;
+
+        let mut i = 0;
         loop {
-            if idx == len {
+            if i == len {
                 //println!("fell off the end");
-                tik_map.entry(curr_price_to_pay).and_modify(|x| { *x -= 1 });
+                tik_map.entry(val).and_modify(|x| { *x -= 1 });
                 break;
             }
-            let curr_tik_price = &ticket_prices[idx];
-            if tik_map.get(curr_tik_price).unwrap() <= &0 {
-                //println!("Zero left for {}", curr_tik_price);
+            let t = &ticket_prices[i];
+            i += 1;
+            if tik_map.get(t).unwrap() <= &0 {
+                //println!("Zero left for {}", t);
                 continue;
             }
-            idx += 1;
-            
+
             // Ticket price is exact match of customer max, return it
-            if **curr_tik_price == customer_max {
-                curr_price_to_pay = **curr_tik_price;
-                tik_map.entry(curr_price_to_pay).and_modify(|x| { *x -= 1 });
-                //println!("found it {}", curr_tik_price);
+            if **t == c {
+                val = **t;
+                tik_map.entry(val).and_modify(|x| { *x -= 1 });
+                //println!("found it {}", t);
                 break;
             }
 
             // Ticket price is less than customer max, record the value but go on
-            if **curr_tik_price < customer_max {
+            if **t < c {
                 // Keep track of the previous ticket price customer would buy
-                curr_price_to_pay = **curr_tik_price;
-                //println!("found one {}", curr_tik_price);
+                val = **t;
+                //println!("found one {}", t);
 
             // Ticket price exceeds customer match, return previous
             } else {
-                tik_map.entry(curr_price_to_pay).and_modify(|x| { *x -= 1 });
-                //println!("break with prev {}", curr_price_to_pay);
+                tik_map.entry(val).and_modify(|x| { *x -= 1 });
+                //println!("break with prev {}", val);
                 break;
             }
         }
-        println!("{}", curr_price_to_pay);
+        println!("{}", val);
     }
 }
-
