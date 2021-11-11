@@ -44,6 +44,7 @@ fn main() {
 
         //println!("tickets {:?}", tik_map);
         let mut val = -1;
+        let mut prev = &&-1;
 
         let mut i = 0;
         loop {
@@ -54,6 +55,10 @@ fn main() {
             }
             let t = &ticket_prices[i];
             i += 1;
+            if t == prev {
+                continue
+            }
+            prev = t;
             if tik_map.get(t).unwrap() <= &0 {
                 //println!("Zero left for {}", t);
                 continue;
