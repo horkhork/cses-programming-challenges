@@ -33,15 +33,15 @@ fn main() {
     let mut curr_cnt = 0;
     let mut movie_cnt = 0;
     let mut last_key = 0;
-    for (&key, val) in start_times.iter() {
+    for (&key, _val) in start_times.iter() {
         //println!("Looking for ends {}..{}", last_key, key);
-        for (_k, v) in end_times.range(last_key+1..=key) {
-            curr_cnt -= v;
-            //println!("End {} with {} curr {}", _k, v, curr_cnt);
+        for (_k, _v) in end_times.range(last_key+1..=key) {
+            curr_cnt -= 1;
+            //println!("End {} with {} curr {}", _k, _v, curr_cnt);
         }
 
-        curr_cnt += val;
-        //println!("Start {} with {} curr {}", key, val, curr_cnt);
+        curr_cnt += 1;
+        //println!("Start {} with {} curr {}", key, _val, curr_cnt);
         if curr_cnt == 1 {
             //println!("watching movie starting at {}", key);
             movie_cnt += 1;
