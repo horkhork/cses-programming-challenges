@@ -39,29 +39,21 @@ fn main() {
 
     let mut cnt = 0;
     for d in desired_apt_sizes {
-        // Handle delta +/- by prefering values closer to the actual available apt price
-        // Select the range of available apartments -delta "k"
-        cnt += if let Some((&p, &v)) = available_apt_sizes.range(d - k..d).rev().next() {
-            match v {
-                // If the counter is 1, there will be nothing left after this
-                // iteration, so remove the key from the BTreeMap
-                1 => available_apt_sizes.remove(&p),
-                // Do the actual counter decrement
-                _ => available_apt_sizes.insert(p, v - 1),
-            };
-            1
-        // Select the range of available apartments +delta "k"
-        } else if let Some((&p, &v)) = available_apt_sizes.range(d..=d + k).next() {
-            match v {
-                // If the counter is 1, there will be nothing left after this
-                // iteration, so remove the key from the BTreeMap
-                1 => available_apt_sizes.remove(&p),
-                // Do the actual counter decrement
-                _ => available_apt_sizes.insert(p, v - 1),
-            };
-            1
-        } else {
-            0
+        // Select the range of available apartments +/- delta "k"
+        cnt += match available_apt_sizes.range(d-k..=d+k).next() {
+            // If something is found, decrement the BTree counter and return 1
+            Some((&p, &v)) => {
+                match v {
+                    // If the counter is 1, there will be nothing left after this
+                    // iteration, so remove the key from the BTreeMap
+                    1 => available_apt_sizes.remove(&p),
+                    // Do the actual counter decrement
+                    _ => available_apt_sizes.insert(p, v - 1),
+                };
+                1
+            },
+            // If something nothing is found, return 0
+            None => 0
         };
     }
 
