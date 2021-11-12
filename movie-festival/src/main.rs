@@ -19,28 +19,33 @@ fn main() {
         }
         let mut split = line.split_whitespace();
         //println!("Line {} X:{} {:?}", line, x, split);
-        *start_times.entry(split.next().unwrap().parse().unwrap()).or_insert(0) += 1;
-        *end_times.entry(split.next().unwrap().parse().unwrap()).or_insert(0) += 1;
+        *start_times
+            .entry(split.next().unwrap().parse().unwrap())
+            .or_insert(0) += 1;
+        *end_times
+            .entry(split.next().unwrap().parse().unwrap())
+            .or_insert(0) += 1;
         line = "".to_string();
     }
-    println!("Starts: {:?}", start_times);
-    println!("Ends: {:?}", end_times);
+    //println!("Starts: {:?}", start_times);
+    //println!("Ends: {:?}", end_times);
 
     let mut curr_cnt = 0;
     let mut movie_cnt = 0;
     let mut last_key = 0;
     for (&key, val) in start_times.iter() {
-        for (_k, v) in end_times.range(last_key..=key) {
+        //println!("Looking for ends {}..{}", last_key, key);
+        for (_k, v) in end_times.range(last_key+1..=key) {
             curr_cnt -= v;
-            println!("End {} with {} curr {}", _k, v, curr_cnt);
+            //println!("End {} with {} curr {}", _k, v, curr_cnt);
         }
 
-        println!("Start {} with {} curr {}", key, val, curr_cnt);
+        curr_cnt += val;
+        //println!("Start {} with {} curr {}", key, val, curr_cnt);
         if curr_cnt == 1 {
-            println!("watching movie starting at {}", key);
+            //println!("watching movie starting at {}", key);
             movie_cnt += 1;
         }
-        curr_cnt += val;
         last_key = key;
     }
 
