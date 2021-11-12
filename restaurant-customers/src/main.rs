@@ -1,7 +1,6 @@
+use std::cmp;
 use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader};
-use std::cmp;
-
 
 fn main() {
     let mut input = BufReader::new(std::io::stdin());
@@ -17,23 +16,19 @@ fn main() {
 
     // Store desired apartment size
     let mut line = "".to_string();
-    loop {
-        if let Ok(x) = input.read_line(&mut line) {
-            if x == 0 {
-                // End of the file
-                break;
-            }
-            let mut split = line.split_whitespace();
-            //println!("Line {} X:{} {:?}", line, x, split);
-            let s: i32 = split.next().unwrap().parse().unwrap();
-            let e: i32 = split.next().unwrap().parse().unwrap();
-            let p = start_times.entry(s).or_insert(0);
-            *p += 1;
-            let p = end_times.entry(e).or_insert(0);
-            *p += 1;
-        } else {
+    while let Ok(x) = input.read_line(&mut line) {
+        if x == 0 {
+            // End of the file
             break;
         }
+        let mut split = line.split_whitespace();
+        //println!("Line {} X:{} {:?}", line, x, split);
+        let s: i32 = split.next().unwrap().parse().unwrap();
+        let e: i32 = split.next().unwrap().parse().unwrap();
+        let p = start_times.entry(s).or_insert(0);
+        *p += 1;
+        let p = end_times.entry(e).or_insert(0);
+        *p += 1;
         line = "".to_string();
     }
     //println!("Starts: {:?}", start_times);
@@ -43,9 +38,9 @@ fn main() {
     let mut highwater_mark = 0;
     let mut last_key = 0;
     for (&key, val) in start_times.iter() {
-        for (k, v) in end_times.range(last_key..=key) {
+        for (_, v) in end_times.range(last_key..=key) {
             //println!("End {} with {}", k, v);
-            curr_cnt -= val;
+            curr_cnt -= v;
         }
 
         //println!("Start {} with {}", key, val);
@@ -55,5 +50,4 @@ fn main() {
     }
 
     println!("{}", highwater_mark);
-
 }
