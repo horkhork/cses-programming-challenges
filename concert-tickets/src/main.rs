@@ -1,8 +1,5 @@
+use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader};
-use std::collections::HashMap;
-use std::collections::HashSet;
-
-//use std::cmp;
 
 fn main() {
     let mut input = BufReader::new(std::io::stdin());
@@ -12,79 +9,52 @@ fn main() {
     let _n: i32 = split.next().unwrap().parse().unwrap();
     let _m: i32 = split.next().unwrap().parse().unwrap();
 
+    let mut tickets = BTreeMap::new();
+
+    // Put all ticket prices into a BTreeMap with price as the key and the
+    // number of occurances as the value
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-
-    // HashSet of unique ticket prices
-    let mut ticket_prices = HashSet::new();
-
-    // Keep track of ticket prices and the number of times each price occurs
-    let mut tik_map = HashMap::new();
     for tik in line.split_whitespace() {
         let tik = tik.parse::<i32>().unwrap();
-        //println!("tik {}", tik);
-        let cnt = tik_map.entry(tik).or_insert(0);
-        *cnt += 1;
-        ticket_prices.insert(tik);
+        let p = tickets.entry(tik).or_insert(0);
+        *p += 1;
     }
-    let mut ticket_prices: Vec<&i32> = ticket_prices.iter().collect();
-    ticket_prices.sort_by(|a, b| a.partial_cmp(b).unwrap());
-    //println!("tickets_prices {:?}", ticket_prices);
-    //println!("tickets {:?}", tik_map);
-    let len = ticket_prices.len();
 
+    // Manually lock stdout for performance improvements, see:
+    // https://nnethercote.github.io/perf-book/io.html#locking
+    use std::io::Write;
+    let stdout = std::io::stdout();
+    let mut lock = stdout.lock();
+
+    // Iterate over customer max prices
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    //println!("customers {:?}", customers);
-
     for c in line.split_whitespace() {
         let c = c.parse::<i32>().unwrap();
 
-        //println!("Customer max {}", c);
-
-        //println!("tickets {:?}", tik_map);
-        let mut val = -1;
-        let mut prev = &&-1;
-
-        let mut i = 0;
-        loop {
-            if i == len {
-                //println!("fell off the end");
-                tik_map.entry(val).and_modify(|x| { *x -= 1 });
-                break;
+        // This is the magic. The range operator on a BTreeMap will return the
+        // next available key in the map in order:
+        // https://doc.rust-lang.org/std/collections/struct.BTreeMap.html#method.range
+        // This is an efficient method to either find the exact key, or the next
+        // available key. Search for the range 0 to CustomerMaxPrice in reverse
+        // order and only take the first element if found.
+        let val = match tickets.range(0..=c).rev().next() {
+            Some((&k, &v)) => {
+                // If something is found, decrement the counter
+                match v {
+                    // If the counter is 1, there will be nothing left after this
+                    // iteration, so remove the key from the BTreeMap
+                    1 => tickets.remove(&k),
+                    // Do the actual counter decrement
+                    _ => tickets.insert(k, v - 1),
+                };
+                k
             }
-            let t = &ticket_prices[i];
-            i += 1;
-            if t == prev {
-                continue
-            }
-            prev = t;
-            if tik_map.get(t).unwrap() <= &0 {
-                //println!("Zero left for {}", t);
-                continue;
-            }
+            // If something is not found, return -1
+            None => -1,
+        };
 
-            // Ticket price is exact match of customer max, return it
-            if **t == c {
-                val = **t;
-                tik_map.entry(val).and_modify(|x| { *x -= 1 });
-                //println!("found it {}", t);
-                break;
-            }
-
-            // Ticket price is less than customer max, record the value but go on
-            if **t < c {
-                // Keep track of the previous ticket price customer would buy
-                val = **t;
-                //println!("found one {}", t);
-
-            // Ticket price exceeds customer match, return previous
-            } else {
-                tik_map.entry(val).and_modify(|x| { *x -= 1 });
-                //println!("break with prev {}", val);
-                break;
-            }
-        }
-        println!("{}", val);
+        writeln!(lock, "{}", val).unwrap();
     }
 }
