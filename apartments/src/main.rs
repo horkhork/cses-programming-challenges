@@ -37,11 +37,13 @@ fn main() {
     let stdout = std::io::stdout();
     let mut lock = stdout.lock();
 
-    let mut cnt = 0;
-    for d in desired_apt_sizes {
-        // Select the range of available apartments +/- delta "k"
-        cnt += match available_apt_sizes.range(d-k..=d+k).next() {
-            // If something is found, decrement the BTree counter and return 1
+    // Iterate over the desired apartments using map() and sum() to calculate the
+    // number of applicants that actually get an apartment
+    let val: i32 = desired_apt_sizes
+        .iter()
+        // Select the range of available apartment prices +/- delta "k"
+        .map(|d| match available_apt_sizes.range(d - k..=d + k).next() {
+            // If something is found, maintian the counters in the BTreeMap
             Some((&p, &v)) => {
                 match v {
                     // If the counter is 1, there will be nothing left after this
@@ -50,12 +52,15 @@ fn main() {
                     // Do the actual counter decrement
                     _ => available_apt_sizes.insert(p, v - 1),
                 };
+                // We found an apartment for this applicant, return 1 to be summed up
                 1
-            },
+            }
             // If something nothing is found, return 0
-            None => 0
-        };
-    }
+            None => 0,
+        })
+        .collect::<Vec<i32>>()
+        .iter()
+        .sum();
 
-    writeln!(lock, "{}", cnt).unwrap();
+    writeln!(lock, "{}", val).unwrap();
 }
