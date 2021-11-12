@@ -13,16 +13,21 @@ fn main() {
     // Store desired apartment size
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    let desired_apt_sizes = line.split_whitespace().map(|x| x.parse::<i32>().unwrap());
+    let mut desired_apt_sizes = line
+        .split_whitespace()
+        .map(|x| x.parse::<i32>().unwrap())
+        .collect::<Vec<i32>>();
+
+    desired_apt_sizes.sort_by(|a, b| a.partial_cmp(b).unwrap());
 
     // Put all available apartment prices into a BTreeMap with price as the key and the
     // number of occurances as the value
     let mut available_apt_sizes = BTreeMap::new();
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    for tik in line.split_whitespace() {
-        let tik = tik.parse::<i32>().unwrap();
-        let p = available_apt_sizes.entry(tik).or_insert(0);
+    for apt in line.split_whitespace() {
+        let apt = apt.parse::<i32>().unwrap();
+        let p = available_apt_sizes.entry(apt).or_insert(0);
         *p += 1;
     }
 
@@ -34,22 +39,29 @@ fn main() {
 
     let mut cnt = 0;
     for d in desired_apt_sizes {
-
-        // Select the range of available apartments +/- delta "k"
-        cnt += match available_apt_sizes.range(d-k..=d+k).next() {
-            // If something is found, decrement the BTree counter and return 1
-            Some((&p, &v)) => {
-                match v {
-                    // If the counter is 1, there will be nothing left after this
-                    // iteration, so remove the key from the BTreeMap
-                    1 => available_apt_sizes.remove(&p),
-                    // Do the actual counter decrement
-                    _ => available_apt_sizes.insert(p, v - 1),
-                };
-                1
-            },
-            // If something nothing is found, return 0
-            None => 0
+        // Handle delta +/- by prefering values closer to the actual available apt price
+        // Select the range of available apartments -delta "k"
+        cnt += if let Some((&p, &v)) = available_apt_sizes.range(d - k..d).rev().next() {
+            match v {
+                // If the counter is 1, there will be nothing left after this
+                // iteration, so remove the key from the BTreeMap
+                1 => available_apt_sizes.remove(&p),
+                // Do the actual counter decrement
+                _ => available_apt_sizes.insert(p, v - 1),
+            };
+            1
+        // Select the range of available apartments +delta "k"
+        } else if let Some((&p, &v)) = available_apt_sizes.range(d..=d + k).next() {
+            match v {
+                // If the counter is 1, there will be nothing left after this
+                // iteration, so remove the key from the BTreeMap
+                1 => available_apt_sizes.remove(&p),
+                // Do the actual counter decrement
+                _ => available_apt_sizes.insert(p, v - 1),
+            };
+            1
+        } else {
+            0
         };
     }
 
