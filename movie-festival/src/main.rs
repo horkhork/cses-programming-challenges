@@ -1,3 +1,4 @@
+use std::cmp;
 use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader};
 
@@ -8,8 +9,9 @@ fn main() {
     let mut split = line.split_whitespace();
     let _n: i32 = split.next().unwrap().parse().unwrap();
 
-    let mut start_times: BTreeMap<i32, i32> = BTreeMap::new();
-    let mut end_times: BTreeMap<i32, i32> = BTreeMap::new();
+    // map movie end times to movie start times so we can quickly iterate over
+    // the movies by movie end time first end to last
+    let mut movie_times: BTreeMap<i32, i32> = BTreeMap::new();
 
     let mut line = "".to_string();
     while let Ok(x) = input.read_line(&mut line) {
@@ -19,34 +21,32 @@ fn main() {
         }
         let mut split = line.split_whitespace();
         //println!("Line {} X:{} {:?}", line, x, split);
-        *start_times
-            .entry(split.next().unwrap().parse().unwrap())
-            .or_insert(0) += 1;
-        *end_times
-            .entry(split.next().unwrap().parse().unwrap())
-            .or_insert(0) += 1;
+
+        let start = split.next().unwrap().parse().unwrap();
+        let end = split.next().unwrap().parse().unwrap();
+
+        let entry = movie_times.entry(end).or_insert(start);
+        *entry = cmp::max(*entry, start);
+
         line = "".to_string();
     }
-    //println!("Starts: {:?}", start_times);
-    //println!("Ends: {:?}", end_times);
+    //println!("Movies: {:?}", movie_times);
 
-    let mut curr_cnt = 0;
-    let mut movie_cnt = 0;
-    let mut last_key = 0;
-    for (&key, _val) in start_times.iter() {
-        //println!("Looking for ends {}..{}", last_key, key);
-        for (_k, _v) in end_times.range(last_key+1..=key) {
-            curr_cnt -= 1;
-            //println!("End {} with {} curr {}", _k, _v, curr_cnt);
-        }
+    let mut movie_cnt = 1;
+    let mut movie_times = movie_times.iter();
+    let mut prev = movie_times.next().unwrap();
+    //println!("Prev:{:?}", prev);
 
-        curr_cnt += 1;
-        //println!("Start {} with {} curr {}", key, _val, curr_cnt);
-        if curr_cnt == 1 {
-            //println!("watching movie starting at {}", key);
+    for next in movie_times {
+        // if the previous end time (tuple index 0) is less than or equal to next
+        // movie start time (tuple index 1) then increment the counter and update
+        // previous to the next one
+        if prev.0 <= next.1 {
+            //println!("Found one");
             movie_cnt += 1;
+            prev = next;
         }
-        last_key = key;
+        //println!("Next:{:?}", next);
     }
 
     println!("{}", movie_cnt);
