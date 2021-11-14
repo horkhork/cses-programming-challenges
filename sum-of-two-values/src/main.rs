@@ -11,14 +11,15 @@ fn main() {
 
     let mut values: BTreeMap<i32, i32> = BTreeMap::new();
     let half = x / 2;
+    let is_even = x % 2 == 0;
     let mut half_loc1 = None;
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
     for (i, val) in line.split_whitespace().enumerate() {
         let val = val.parse::<i32>().unwrap();
-        if val == half && half_loc1.is_none() {
+        if is_even && val == half && half_loc1.is_none() {
             half_loc1 = Some(i);
-        } else if val == half {
+        } else if is_even && val == half {
             println!("{} {}", half_loc1.unwrap() + 1, i + 1);
             return;
         }
