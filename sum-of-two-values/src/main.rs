@@ -18,19 +18,15 @@ fn main() {
         //println!("Adding {} at index {}", val, i);
     }
     //println!("n:{} ={} values: {:?}", n, x, values);
-    let second_half = values.split_off(&(x/2));
+    let second_half = values.split_off(&(x / 2));
     //println!("First {:?}", values);
     //println!("Second {:?}", second_half);
-    for (a, i) in values.iter(){
+    for (a, i) in values.iter() {
         //println!("check: {}", a);
-        for (b, j) in second_half.iter().rev() {
-            //println!("check: a:{}({}) b:{}({})", a, i, b, j);
-            if a + b == x {
-                //println!("Found one: a:{}({}) b:{}({})", a, i, b, j);
-                println!("{} {}", i+1, j+1);
-                return;
-            }
-        }
+        if let Some(j) = second_half.get(&(x - a)) {
+            println!("{} {}", i + 1, j + 1);
+            return;
+        };
     }
 
     println!("IMPOSSIBLE");
