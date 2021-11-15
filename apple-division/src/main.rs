@@ -24,18 +24,18 @@ fn main() {
     //
     println!("{}", part2- part1);
 
-    let mut sum = -1;
-    let to_remove = 0;
-    while values.len() {
+    let mut s = -1;
+    //let to_remove = 0;
     for val in values.iter().rev() {
-        if sum + val <= part2 {
-            sum += val;
-            println!("add {}; {}", val, sum);
+        if s + val <= part2 {
+            s += val;
+            println!("add {}; {}", val, s);
         } else {
             println!("nope {}", val);
         }
-        to_remove =
+        //to_remove =
     }
+    let ret = subset_sums(values.into_iter().collect(), sum / 2, vec![]);
     //for (a, i) in values.iter() {
     //    //println!("check: {}", a);
     //    if let Some(j) = second_half.get(&(x - a)) {
@@ -44,4 +44,34 @@ fn main() {
     //    };
     //}
 
+}
+
+
+enum Possibilities {
+    Lt,
+    Eq,
+    Gt,
+}
+
+fn subset_sums(numbers: Vec<i32>, threshold: i32, part: Vec<i32>) -> Possibilities {
+    let s: i32 = part.iter().sum();
+    if s == threshold {
+        println!("EQ threshold {} with {}", threshold, s);
+        return Possibilities::Eq;
+    } else if s > threshold {
+        //println!("Exceeded threshold {} with {}", threshold, s);
+        return Possibilities::Gt;
+    }
+
+    for (i, n) in numbers.iter().enumerate() {
+        let mut rem = Vec::new();
+        rem.extend_from_slice(&numbers[i+1..]);
+        let mut p = Vec::new();
+        p.extend_from_slice(&part);
+        p.push(*n);
+        subset_sums(rem, threshold, p);
+        println!("list {} {} {:?}+{}", (part.iter().sum::<i32>() + n)-threshold, threshold, part, n);
+    }
+
+    return Possibilities::Lt;
 }
