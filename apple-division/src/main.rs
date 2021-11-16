@@ -17,14 +17,16 @@ fn main() {
     }
     println!("values {:?}", values);
 
+    let sum = values.iter().sum();
     let apples = Apples{
-        group1: BTreeMap::from([(values.iter().sum(), values)]),
-        group2: BTreeMap::from([(0, vec![])]),
+        group1: BTreeMap::from([(sum, values)]),
+        group2: BTreeMap::new(),
     };
 
     println!("apples {}", apples);
     //subset_sums(values.into_iter().collect(), sum / 2, vec![]);
 
+    combinate_vec(apples.group1[&sum].clone(), vec![]);
 }
 
 struct Apples {
@@ -39,7 +41,23 @@ impl fmt::Display for Apples {
     }
 }
 
-//fn subset_sums(all_numbers: Parts, numbers: Vec<i32>, threshold: i32, part: Vec<i32>) {
+fn combinate_vec(mut group1: Vec<i32>, mut group2: Vec<i32>) {
+    if group1.is_empty() {
+        println!("is empty! group2: {:?}", group2);
+    }
+    while let Some(item) = group1.pop() {
+        group2.push(item);
+        println!("Some group1:{:?} group2:{:?}", group1, group2);
+        //let s1: i32 = group1.iter().sum();
+        //let s2: i32 = group2.iter().sum();
+        combinate_vec(group1.clone(), group2.clone());
+
+    };
+    println!("Fell off the end group1:{:?} group2:{:?}", group1, group2);
+    return;
+}
+
+//fn subset_sums(numbers: Vec<i32>, threshold: i32, part: Vec<i32>) {
 //    let s: i32 = part.iter().sum();
 //    let mut counts: BTreeMap<i32, Vec<i32>> = BTreeMap::new();
 //    if numbers.len() == 0 {
@@ -63,7 +81,7 @@ impl fmt::Display for Apples {
 //        let mut p = Vec::new();
 //        p.extend_from_slice(&part);
 //        p.push(*n);
-//        let mut ret = subset_sums(all_numbers, rem, threshold, p);
+//        let mut ret = subset_sums(rem, threshold, p);
 //
 //        //println!("list {} {} {:?}+{}", (part.iter().sum::<i32>() + n)-threshold, threshold, part, n);
 //    }
