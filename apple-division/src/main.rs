@@ -13,20 +13,27 @@ fn main() {
     input.read_line(&mut line).unwrap();
     let mut values = Vec::new();
     for val in line.split_whitespace() {
-        values.push(val.parse::<i32>().unwrap());
+        let val = val.parse::<i32>().unwrap();
+        values.push(val);
     }
     println!("values {:?}", values);
-
-    let sum = values.iter().sum();
-    let apples = Apples{
-        group1: BTreeMap::from([(sum, values)]),
-        group2: BTreeMap::new(),
-    };
-
-    println!("apples {}", apples);
+    let test = BTreeSet::from([1,1,2,2,3,3]);
+    println!("test {:?}", test);
+    //let sum = values.iter().sum();
+    //let apples = Apples{
+    //    group1: BTreeMap::from([(sum, values)]),
+    //    group2: BTreeMap::new(),
+    //};
+    //println!("apples {}", apples);
     //subset_sums(values.into_iter().collect(), sum / 2, vec![]);
 
-    combinate_vec(apples.group1[&sum].clone(), vec![]);
+    //combinate_vec(apples.group1[&sum].clone(), vec![]);
+    let len = if values.len() % 2 == 0 {
+        values.len() / 2
+    } else {
+        (values.len() / 2) + 1
+    };
+    combinate_vec(vec![], values.clone(), len, values);
 }
 
 struct Apples {
@@ -41,21 +48,53 @@ impl fmt::Display for Apples {
     }
 }
 
-fn combinate_vec(mut group1: Vec<i32>, mut group2: Vec<i32>) {
-    if group1.is_empty() {
-        println!("is empty! group2: {:?}", group2);
+//fn combinate_vec(mut accum: Vec<i32>, rest: Vec<i32>, n: usize) -> i32 {
+//    println!("Accum:{:?} Rest:{:?} N:{:?}", accum, rest, n);
+//    if n == 0 {
+//        println!("Done Accum:{:?} Rest:{:?}", accum, rest);
+//        let pop = accum.pop().unwrap();
+//        println!("Pop:{}", pop);
+//        return pop;
+//    } else {
+//        //for i in 0..rest.len() {
+//        let mut r = rest.clone();
+//        for (i, _) in rest.iter().enumerate() {
+//            //a.push(rest[i]);
+//            let mut a = accum.clone();
+//            a.push(r.pop().unwrap());
+//            a.push(combinate_vec(a.clone(), r.to_vec(), (n-1) as usize));
+//        }
+//        return -1;
+//    }
+//}
+fn combinate_vec(accum: Vec<i32>, rest: Vec<i32>, n: usize, all: Vec<i32>) {
+    //println!("Accum:{:?} Rest:{:?} N:{:?}", accum, rest, n);
+    if n == 0 {
+        //println!("Done Accum:{:?} Rest:{:?}", accum, rest);
+        let rest: Vec<_> = all.into_iter().filter(|x| !accum.contains(x)).collect();
+        println!("Done Accum:{:?} Rest:{:?}", accum, rest);
+    } else {
+        for i in 0..rest.len() {
+        //let mut r = rest.clone();
+        //for (i, _) in rest.iter().enumerate() {
+            let mut a = accum.clone();
+            a.push(rest[i]);
+            //let mut a = accum.clone();
+            //a.push(r.pop().unwrap());
+            combinate_vec(a, rest[i+1..].to_vec(), (n-1) as usize, all.clone());
+        }
     }
-    while let Some(item) = group1.pop() {
-        group2.push(item);
-        println!("Some group1:{:?} group2:{:?}", group1, group2);
-        //let s1: i32 = group1.iter().sum();
-        //let s2: i32 = group2.iter().sum();
-        combinate_vec(group1.clone(), group2.clone());
-
-    };
-    println!("Fell off the end group1:{:?} group2:{:?}", group1, group2);
-    return;
 }
+//    static void combinations2(String[] arr, int len, int startPosition, String[] result){
+//        if (len == 0){
+//            System.out.println(Arrays.toString(result));
+//            return;
+//        }       
+//        for (int i = startPosition; i <= arr.length-len; i++){
+//            result[result.length - len] = arr[i];
+//            combinations2(arr, len-1, i+1, result);
+//        }
+//    }      
 
 //fn subset_sums(numbers: Vec<i32>, threshold: i32, part: Vec<i32>) {
 //    let s: i32 = part.iter().sum();
