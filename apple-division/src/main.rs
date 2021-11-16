@@ -17,26 +17,34 @@ fn main() {
         values.insert(val);
         sum += val;
     }
-    //println!("{} values: {:?}", sum, values);
+    let sum1 = sum / 2;
+    let sum2 = sum - sum1;
+    println!("Sums {} {}", sum1, sum2);
 
-    let ret = subset_sums(values.into_iter().collect(), sum / 2, vec![]);
-    let lowest = ret.iter().next().unwrap();
-    println!("{}", lowest.0);
-    println!("{:?}", ret);
+    subset_sums(values.into_iter().collect(), sum / 2, vec![]);
 }
 
-fn subset_sums(numbers: Vec<i32>, threshold: i32, part: Vec<i32>) -> BTreeMap<i32, Vec<i32>> {
+struct Parts {
+    part1: BTreeMap<i32, Vec<i32>>,
+    part2: BTreeMap<i32, Vec<i32>>,
+}
+
+fn subset_sums(all_numbers: Parts, numbers: Vec<i32>, threshold: i32, part: Vec<i32>) {
     let s: i32 = part.iter().sum();
     let mut counts: BTreeMap<i32, Vec<i32>> = BTreeMap::new();
-    if s == threshold {
-        println!("EQ threshold {} with {}", threshold, s);
-        counts.insert(0, part);
-        return counts;
-    } else if s > threshold {
-        println!("Exceeded threshold {} with {}", threshold, s);
-        let over = s - threshold;
-        counts.insert(over, part);
-        return counts;
+    if numbers.len() == 0 {
+        counts.insert(part.iter().sum(), part);
+        return ;
+    //if s == threshold {
+    //    println!("EQ threshold {} with {}", threshold, s);
+    //    counts.insert(0, part);
+    //    return counts;
+    //} else if s > threshold {
+    //    println!("Exceeded threshold {} with {}", threshold, s);
+    //    let over = s - threshold;
+    //    counts.insert(over, part);
+    //    return counts;
+    //}
     }
 
     for (i, n) in numbers.iter().enumerate() {
@@ -45,11 +53,9 @@ fn subset_sums(numbers: Vec<i32>, threshold: i32, part: Vec<i32>) -> BTreeMap<i3
         let mut p = Vec::new();
         p.extend_from_slice(&part);
         p.push(*n);
-        let mut ret = subset_sums(rem, threshold, p);
-        counts.append(&mut ret);
+        let mut ret = subset_sums(all_numbers, rem, threshold, p);
 
         //println!("list {} {} {:?}+{}", (part.iter().sum::<i32>() + n)-threshold, threshold, part, n);
     }
 
-    return counts;
 }
