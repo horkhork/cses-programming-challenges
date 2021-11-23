@@ -1,4 +1,5 @@
 use std::io::{BufRead, BufReader};
+use std::cmp;
 
 fn main() {
     let mut input = BufReader::new(std::io::stdin());
@@ -28,25 +29,37 @@ fn main() {
 
     //let negs: Vec<i32> = values.filter(|x| x <
     let mut negative_indexes: Vec<usize> = values.iter().enumerate().filter(|(_, &x)| x < 0).map(|(i, _)| i).collect();
+    let len = negative_indexes.len();
+    let val_len = values.len();
+    if len == 0 {
+        let m = values.iter().fold(0, |acc, x| acc + x);
+        println!("{}", m);
+        return;
+    } else if len == val_len {
+        let m = values.iter().max().unwrap();
+        println!("{}", m);
+        return;
+    }
+
+
     if negative_indexes[0] != 0 {
         negative_indexes.insert(0,0);
     }
     let len = negative_indexes.len();
-    let val_len = values.len();
     if negative_indexes[len - 1] != val_len - 1 {
-        negative_indexes.push(val_len - 1);
+        negative_indexes.push(val_len);
     }
-    println!("{:?}", negative_indexes);
+    //println!("{:?}", negative_indexes);
+    let mut m = i32::MIN;
     let negative_indexes2 = negative_indexes.clone();
-    //let it: Vec<(&usize,&usize)> = negative_indexes.iter().zip(negative_indexes_cp.iter()).filter(|(x,y)| x == y).collect();
-    //let it: Vec<(&usize,&usize)> = negative_indexes.iter().flat_map(|x| negative_indexes.clone().iter().map(|y| (x,y))).collect();
     for x in negative_indexes {
         for y in &negative_indexes2 {
-            if x == *y {
+            if x >= *y {
                 continue;
             }
-            println!("{} {}", x,y);
+            m = cmp::max(m, values[x+1..*y].iter().fold(0, |sum, i| sum + i));
+            println!("{} {}: {:?}", x,y, m);
         }
     }
-
+    println!("{}", m);
 }
