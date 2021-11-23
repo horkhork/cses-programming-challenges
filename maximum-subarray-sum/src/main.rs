@@ -15,17 +15,18 @@ fn main() {
         values.push(val);
     }
 
-    let mut best_sum = i64::MIN;
-    let mut current_sum: i64 = 0;
-    for x in values {
-        if current_sum <= 0 {
-            current_sum = x;
-        } else {
-            current_sum += x;
-        }
-        if current_sum > best_sum {
-            best_sum = current_sum;
-        }
-    }
-    println!("{}", best_sum);
+    let best = values
+        .iter()
+        .fold((i64::MIN, 0), |(mut best, mut current), x| {
+            if current <= 0 {
+                current = *x;
+            } else {
+                current += x;
+            }
+            if current > best {
+                best = current;
+            }
+            (best, current)
+        });
+    println!("{:?}", best.0);
 }
