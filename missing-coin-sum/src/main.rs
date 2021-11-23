@@ -1,3 +1,4 @@
+use std::collections::BTreeSet;
 use std::io::{BufRead, BufReader};
 
 fn main() {
@@ -16,12 +17,28 @@ fn main() {
         .collect();
     let v2 = values.clone();
 
+    //let values = values
+    //    .iter()
+    //    .flat_map(|x| v2[1..].iter().map(|y| vec![x, y]).collect::<Vec<Vec<&i64>>>())
+    //    .inspect(|v| println!("V{:?}", v))
+    //    .collect::<Vec<Vec<&i64>>>();
+    //println!("Values: {:?}", values);
+
     let values = values
         .iter()
-        .flat_map(|x| v2[1..].iter().map(|y| vec![x, y]).collect::<Vec<Vec<&i64>>>())
+        .flat_map(|x| {
+            v2[1..]
+                .iter()
+                .map(|y| vec![x, y])
+                .collect::<Vec<Vec<&i64>>>()
+        })
         .inspect(|v| println!("V{:?}", v))
-        .collect::<Vec<Vec<&i64>>>();
+        .fold(BTreeSet::new(), |mut acc: BTreeSet<i64>, mut val| {
+            acc.insert(val.iter().map(|n| *n).sum::<i64>());
+            acc
+        });
     println!("Values: {:?}", values);
+
     ////let values: Vec<i64> = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok()).collect();
     //let best = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok())
     //    //.iter()
