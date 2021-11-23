@@ -25,12 +25,11 @@ fn main() {
         }
     });
     let missing = match missing {
-    ControlFlow::Continue(x) => x,
-    ControlFlow::Break(x) => x,
+        ControlFlow::Continue(x) => x,
+        ControlFlow::Break(x) => x,
     };
 
     println!("{}", missing);
-
 
     //// Algorithm replicated from https://www.geeksforgeeks.org/find-smallest-value-represented-sum-subset-given-array/
     //let mut val: Option<i64> = None;
@@ -50,35 +49,4 @@ fn main() {
     //    val = Some(values.iter().sum::<i64>() + 1);
     //}
     //println!("{}", val.unwrap());
-
-    //let values: BTreeMap<i64,usize> = line
-    //    .split_whitespace()
-    //    .filter_map(|v| v.parse::<i64>().ok())
-    //    .fold(BTreeMap::new(), |mut acc, v| {
-    //        *acc.entry(v).or_insert(0) += 1;
-    //        acc
-    //        });
-    //println!("{:?}", values);
-    //let mut result = 1;
-    //for i in 0..values.len() {
-    //    let i = &(i as i64);
-    //    if values[i] <= result {
-    //        result += values[i]
-    //    }
-    //}
-
-    //let best = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok())
-    //    //.iter()
-    //    .fold((i64::MIN, 0), |(mut best, mut current), x| {
-    //        if current <= 0 {
-    //            current = x;
-    //        } else {
-    //            current += x;
-    //        }
-    //        if current > best {
-    //            best = current;
-    //        }
-    //        (best, current)
-    //    });
-    //println!("{:?}", best.0);
 }
