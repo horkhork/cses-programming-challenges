@@ -1,4 +1,3 @@
-use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader};
 
 fn main() {
@@ -15,7 +14,7 @@ fn main() {
         .split_whitespace()
         .filter_map(|v| v.parse::<i64>().ok())
         .collect();
-    values.sort();
+    values.sort_unstable();
     //println!("{:?}", values);
     let mut val: Option<i64> = None;
     let mut result = 1;
@@ -27,7 +26,7 @@ fn main() {
             //println!("missing {}", result);
             //println!("{}", result);
             val = Some(result);
-            break
+            break;
         }
     }
     if val.is_none() {
@@ -50,7 +49,7 @@ fn main() {
     //        result += values[i]
     //    }
     //}
-    
+
     //let best = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok())
     //    //.iter()
     //    .fold((i64::MIN, 0), |(mut best, mut current), x| {
@@ -66,4 +65,3 @@ fn main() {
     //    });
     //println!("{:?}", best.0);
 }
-
