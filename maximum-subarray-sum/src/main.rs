@@ -16,68 +16,16 @@ fn main() {
     }
 
     let mut best_sum = i64::MIN;
-    //let mut best_start: i64 = 0;
-    //let mut best_end: i64 = 0;
-    //let mut current_start: i64 = 0;
     let mut current_sum: i64 = 0;
-    for (current_end, x) in values.iter().enumerate() {
+    for x in values {
         if current_sum <= 0 {
-            //current_start = current_end as i64;
-            current_sum = *x;
+            current_sum = x;
         } else {
             current_sum += x;
         }
         if current_sum > best_sum {
             best_sum = current_sum;
-            //best_start = current_start;
-            //best_end = current_end as i64 + 1;
         }
     }
     println!("{}", best_sum);
-    ////let sum: i32 = (0..values.len()).fold(i32::MIN, |acc, i|
-    ////    {
-    ////        let mut m = 0;
-    ////        values[i..].iter().map(|x| {
-    ////            m += x;
-    ////            cmp::max(acc, m)
-    ////        })
-    ////        //.inspect(|x| println!("here {:?}", x) )
-    ////        .max().unwrap()
-    ////    });
-
-    ////let negs: Vec<i32> = values.filter(|x| x <
-    //let mut negative_indexes: Vec<usize> = values.iter().enumerate().filter(|(_, &x)| x < 0).map(|(i, _)| i).collect();
-    //let len = negative_indexes.len();
-    //let val_len = values.len();
-    //if len == 0 {
-    //    let m = values.iter().fold(0, |acc, x| acc + x);
-    //    println!("{}", m);
-    //    return;
-    //} else if len == val_len {
-    //    let m = values.iter().max().unwrap();
-    //    println!("{}", m);
-    //    return;
-    //}
-
-
-    //if negative_indexes[0] != 0 {
-    //    negative_indexes.insert(0,0);
-    //}
-    //let len = negative_indexes.len();
-    //if negative_indexes[len - 1] != val_len - 1 {
-    //    negative_indexes.push(val_len);
-    //}
-    ////println!("{:?}", negative_indexes);
-    //let mut m = i32::MIN;
-    //let negative_indexes2 = negative_indexes.clone();
-    //for x in negative_indexes {
-    //    for y in &negative_indexes2 {
-    //        if x >= *y {
-    //            continue;
-    //        }
-    //        m = cmp::max(m, values[x+1..*y].iter().fold(0, |sum, i| sum + i));
-    //        println!("{} {}: {:?}", x,y, m);
-    //    }
-    //}
-    //println!("{}", m);
 }
