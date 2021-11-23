@@ -1,4 +1,4 @@
-use std::collections::BTreeSet;
+use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader};
 
 fn main() {
@@ -11,35 +11,46 @@ fn main() {
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
 
-    let values: Vec<i64> = line
+    let mut values: Vec<i64> = line
         .split_whitespace()
         .filter_map(|v| v.parse::<i64>().ok())
         .collect();
-    let v2 = values.clone();
+    values.sort();
+    //println!("{:?}", values);
+    let mut val: Option<i64> = None;
+    let mut result = 1;
+    for i in 0..values.len() {
+        //println!("i:{} values:{} result:{}", i, values[i], result);
+        if values[i] <= result {
+            result += values[i];
+        } else {
+            //println!("missing {}", result);
+            //println!("{}", result);
+            val = Some(result);
+            break
+        }
+    }
+    if val.is_none() {
+        val = Some(values.iter().sum::<i64>() + 1);
+    }
+    println!("{}", val.unwrap());
 
-    //let values = values
-    //    .iter()
-    //    .flat_map(|x| v2[1..].iter().map(|y| vec![x, y]).collect::<Vec<Vec<&i64>>>())
-    //    .inspect(|v| println!("V{:?}", v))
-    //    .collect::<Vec<Vec<&i64>>>();
-    //println!("Values: {:?}", values);
-
-    let values = values
-        .iter()
-        .flat_map(|x| {
-            v2[1..]
-                .iter()
-                .map(|y| vec![x, y])
-                .collect::<Vec<Vec<&i64>>>()
-        })
-        .inspect(|v| println!("V{:?}", v))
-        .fold(BTreeSet::new(), |mut acc: BTreeSet<i64>, mut val| {
-            acc.insert(val.iter().map(|n| *n).sum::<i64>());
-            acc
-        });
-    println!("Values: {:?}", values);
-
-    ////let values: Vec<i64> = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok()).collect();
+    //let values: BTreeMap<i64,usize> = line
+    //    .split_whitespace()
+    //    .filter_map(|v| v.parse::<i64>().ok())
+    //    .fold(BTreeMap::new(), |mut acc, v| {
+    //        *acc.entry(v).or_insert(0) += 1;
+    //        acc
+    //        });
+    //println!("{:?}", values);
+    //let mut result = 1;
+    //for i in 0..values.len() {
+    //    let i = &(i as i64);
+    //    if values[i] <= result {
+    //        result += values[i]
+    //    }
+    //}
+    
     //let best = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok())
     //    //.iter()
     //    .fold((i64::MIN, 0), |(mut best, mut current), x| {
@@ -55,3 +66,4 @@ fn main() {
     //    });
     //println!("{:?}", best.0);
 }
+
