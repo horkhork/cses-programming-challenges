@@ -9,17 +9,13 @@ fn main() {
 
     let mut line = "".to_string();
     input.read_line(&mut line).unwrap();
-    let mut values = Vec::new();
-    for val in line.split_whitespace() {
-        let val = val.parse::<i64>().unwrap();
-        values.push(val);
-    }
 
-    let best = values
-        .iter()
+    //let values: Vec<i64> = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok()).collect();
+    let best = line.split_whitespace().filter_map(|v| v.parse::<i64>().ok())
+        //.iter()
         .fold((i64::MIN, 0), |(mut best, mut current), x| {
             if current <= 0 {
-                current = *x;
+                current = x;
             } else {
                 current += x;
             }
