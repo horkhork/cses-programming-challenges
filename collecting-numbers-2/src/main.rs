@@ -124,7 +124,6 @@ fn main() {
             round += match a0 {
                 // Original A value == 1
                 x if x == 1 => {
-                    println!("Orig A == 1");
                     let one_more = x + 1;
                     let one_more_idx = indexes[&one_more];
                     println!(
@@ -161,15 +160,18 @@ fn main() {
                     let one_more = x + 1;
                     let one_more_idx = indexes[&one_more];
                     println!(
-                        "Orig A middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}",
-                        x, one_less, one_more, one_less_idx, a, one_more_idx, b
+                        "Orig A middle val {} ({},{}); -idx:{} > a:{} && +idx:{} < b:{}",
+                        x, one_less, one_more, one_less_idx, a, one_less_idx, b
                     );
-                    if one_less_idx <= a && one_more_idx < b {
+                    if one_less_idx > a && one_less_idx < b {
                         println!("BBB minus 1");
                         -1
-                    } else {
-                        println!("BBB plus 1");
+                    } else if one_more_idx > a && one_more_idx < b {
+                        println!("BBB minus 1");
                         1
+                    } else {
+                        println!("BBB zero");
+                        0
                     }
                 }
             };
@@ -200,27 +202,28 @@ fn main() {
                         x, one_less, one_less_idx, b
                     );
                     if one_less_idx > a && one_less_idx < b {
-                        println!("FFF plus 1");
+                        //println!("FFF plus 1");
                         1
                     } else {
                         0
                     }
                 }
+                // Original A value in the middle 1 < x < N
                 x => {
                     let one_less = x - 1;
                     let one_less_idx = indexes[&one_less];
                     let one_more = x + 1;
                     let one_more_idx = indexes[&one_more];
-                    println!(
-                        "Orig B middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}",
-                        x, one_less, one_more, one_less_idx, a, one_more_idx, b
-                    );
-                    if one_less_idx <= a && one_more_idx < b {
-                        println!("DDD minus 1");
+                    //println!(
+                    //    "Orig B middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}",
+                    //    x, one_less, one_more, one_less_idx, a, one_more_idx, b
+                    //);
+                    if one_less_idx > a && one_less_idx < b {
+                        1
+                    } else if one_more_idx > a && one_more_idx < b {
                         -1
                     } else {
-                        println!("DDD plus 1");
-                        1
+                        0
                     }
                 }
             };
