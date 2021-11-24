@@ -8,33 +8,44 @@ use std::io::{BufRead, BufReader};
 // 2 3 -> 3 2 1 5 4 -> 4
 
 fn main() {
-    let mut input = BufReader::new(std::io::stdin());
-    let mut line = "".to_string();
-    input.read_line(&mut line).unwrap();
-    let (n, m) = match line.split_whitespace().filter_map(|v| v.parse::<i32>().ok()).collect::<Vec<i32>>()[..] {
+    let input = BufReader::new(std::io::stdin());
+    let mut lines = input.lines();
+
+    let (_n, _m) = match lines
+        .next()
+        .unwrap()
+        .unwrap()
+        .split_whitespace()
+        .filter_map(|v| v.parse::<i32>().ok())
+        .collect::<Vec<i32>>()[..]
+    {
         [n, m] => (n, m),
-        _ => panic!("Line not valid: {}", line),
+        _ => panic!("First line not valid"),
     };
 
-    let mut line = "".to_string();
-    input.read_line(&mut line).unwrap();
-
-    let mut arr: Vec<i64> = line
+    let _arr: Vec<i64> = lines
+        .next()
+        .unwrap()
+        .unwrap()
         .split_whitespace()
         .filter_map(|v| v.parse::<i64>().ok())
         .collect();
 
+    for line in lines {
+        println!("Line {}", line.unwrap());
+    }
     //println!("{}", cnt);
 }
 
 fn collect_numbers(arr: &Vec<i64>) -> usize {
     let mut set: BTreeSet<i64> = BTreeSet::new();
-    arr.iter().map(|x| {
-        set.insert(*x);
-        match set.contains(&(x - 1)) {
-            true => 0,
-            false => 1,
-        }
-    })
-    .sum()
+    arr.iter()
+        .map(|x| {
+            set.insert(*x);
+            match set.contains(&(x - 1)) {
+                true => 0,
+                false => 1,
+            }
+        })
+        .sum()
 }
