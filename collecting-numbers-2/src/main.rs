@@ -135,8 +135,8 @@ fn main() {
                         println!("AAA plus 1");
                         1
                     } else {
-                        println!("AAA minus 1");
-                        -1
+                        println!("AAA zero");
+                        0
                     }
                 }
                 // Original A value == N
@@ -149,12 +149,9 @@ fn main() {
                     );
                     if one_less_idx > a && one_less_idx < b {
                         println!("EEE plus 1");
-                        1
-                    } else if one_less_idx > a {
-                        0
-                    } else {
-                        println!("EEE minus 1");
                         -1
+                    } else {
+                        0
                     }
                 }
                 // Original A value in the middle 1 < x < N
@@ -186,12 +183,12 @@ fn main() {
                         "---Orig B middle val {} (,{}); {} > {}",
                         x, one_more, one_more_idx, a
                     );
-                    if one_more_idx > a {
-                        println!("CCC minus 1");
+                    if one_more_idx > a && one_more_idx < b{
+                        println!("CCC plus 1");
                         -1
                     } else {
-                        println!("CCC plus 1");
-                        1
+                        println!("CCC zero");
+                        0
                     }
                 }
                 // Original B value == N
@@ -205,11 +202,8 @@ fn main() {
                     if one_less_idx > a && one_less_idx < b {
                         println!("FFF plus 1");
                         1
-                    } else if one_less_idx > a {
-                        0
                     } else {
-                        println!("FFF minus 1");
-                        -1
+                        0
                     }
                 }
                 x => {
