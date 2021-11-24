@@ -37,7 +37,7 @@ fn main() {
     let input = BufReader::new(std::io::stdin());
     let mut lines = input.lines();
 
-    let (N, _m) = match lines
+    let (n, _m) = match lines
         .next()
         .unwrap()
         .unwrap()
@@ -45,7 +45,7 @@ fn main() {
         .filter_map(|v| v.parse::<i32>().ok())
         .collect::<Vec<i32>>()[..]
     {
-        [N, m] => (N, m),
+        [n, m] => (n, m),
         _ => panic!("First line not valid"),
     };
 
@@ -59,7 +59,9 @@ fn main() {
     //println!("Arr:{:?}", arr);
 
     let mut indexes: BTreeMap<i32, usize> = BTreeMap::new();
-    let mut round: usize = arr.iter().enumerate()
+    let mut round: i32 = arr
+        .iter()
+        .enumerate()
         .map(|(i, x)| {
             indexes.insert(*x, i);
             match indexes.contains_key(&(x - 1)) {
@@ -68,83 +70,105 @@ fn main() {
             }
         })
         .sum();
-    println!("N:{}", N);
+    println!("N:{}", n);
     println!("Arr:{:?}", arr);
     println!("Indexes:{:?}", indexes);
     println!("Initial Count:{:?}", round);
 
     for line in lines {
+        // Get the next values for a and b, rebased to zero and ordered
         let (a, b) = match line
             .unwrap()
             .split_whitespace()
             .filter_map(|v| v.parse::<usize>().ok())
             .collect::<Vec<usize>>()[..]
         {
-            // Always move indexes to zero-based and ensure a < b
+            // Zero-base indexes and ensure that a < b (ordering doesn't matter for the swaps)
             [a, b] => match a < b {
                 true => (a - 1, b - 1),
                 false => (b - 1, a - 1),
             },
             _ => panic!("line not valid"),
         };
-        let orig_a = arr[a];
-        let orig_b = arr[b];
-        println!("\nProcessing {:?}::: IdxA:{} IdxB:{} ValA:{} ValB:{}", arr, a, b, orig_a, orig_b);
+
+        // Keep track of the original values for calculations
+        let a0 = arr[a];
+        let b0 = arr[b];
+
+        println!(
+            "\nProcessing {:?}::: IdxA:{} IdxB:{} ValA:{} ValB:{}",
+            arr, a, b, a0, b0
+        );
+
+        // Do the actual Swap
         arr.swap(a, b);
-        let new_a = arr[a];
-        let new_b = arr[b];
+
         if b - a == 1 {
+            // Easy case, handle when indexes a and b are adjecent
             println!("adjacent swap");
-            match orig_a < orig_b {
+            match a0 < b0 {
                 true => round += 1,
                 false => round -= 1,
             }
         } else {
-            if (orig_a-orig_b).abs() == 1 {
+            // Handle the case when the values for a and b are monotonic neighbors
+            round += if (a0 - b0).abs() == 1 {
                 println!("monotonic neighbor swap");
-                match orig_a < orig_b {
-                    true => round += 1,
-                    false => round -= 1,
+                match a0 < b0 {
+                    true => 1,
+                    false => -1,
                 }
-            }
-            match orig_a {
+            } else {
+                0
+            };
+            round += match a0 {
                 i if i == 1 => {
                     println!("Orig A == 1");
                     let one_more = i + 1;
                     let one_more_idx = indexes[&one_more];
-                    println!("---Orig A == 1 val {} (,{}); Idx:{} < IdxB:{}", i, one_more, one_more_idx, b);
+                    println!(
+                        "---Orig A == 1 val {} (,{}); Idx:{} < IdxB:{}",
+                        i, one_more, one_more_idx, b
+                    );
                     if one_more_idx > a && one_more_idx < b {
                         println!("AAA plus 1");
-                        round += 1;
+                        1
                     } else {
                         println!("AAA minus 1");
-                        round -= 1;
+                        -1
                     }
-                },
-                i if i == N => {
+                }
+                i if i == n => {
                     println!("Orig A end val {}", i);
-                },
+                    0
+                }
                 i => {
                     let one_less = i - 1;
                     let one_less_idx = indexes[&one_less];
                     let one_more = i + 1;
                     let one_more_idx = indexes[&one_more];
-                    println!("Orig A middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}", i, one_less, one_more, one_less_idx, a, one_more_idx, b);
+                    println!(
+                        "Orig A middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}",
+                        i, one_less, one_more, one_less_idx, a, one_more_idx, b
+                    );
                     if one_less_idx <= a && one_more_idx < b {
                         println!("BBB minus 1");
-                        round -= 1;
+                        -1
                     } else {
                         println!("BBB plus 1");
-                        round += 1;
+                        1
                     }
-                },
+                }
             };
-            match orig_b {
+            match b0 {
                 i if i == 1 => {
                     println!("Orig B == 1");
                     let one_more = i + 1;
                     let one_more_idx = indexes[&one_more];
-                    println!("---Orig B middle val {} (,{}); {} > {}", i, one_more, one_more_idx, a);
+                    println!(
+                        "---Orig B middle val {} (,{}); {} > {}",
+                        i, one_more, one_more_idx, a
+                    );
                     if one_more_idx > a {
                         println!("CCC minus 1");
                         round -= 1;
@@ -152,16 +176,19 @@ fn main() {
                         println!("CCC plus 1");
                         round += 1;
                     }
-                },
-                i if i == N => {
+                }
+                i if i == n => {
                     println!("Orig B end val {}", i);
-                },
+                }
                 i => {
                     let one_less = i - 1;
                     let one_less_idx = indexes[&one_less];
                     let one_more = i + 1;
                     let one_more_idx = indexes[&one_more];
-                    println!("Orig B middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}", i, one_less, one_more, one_less_idx, a, one_more_idx, b);
+                    println!(
+                        "Orig B middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}",
+                        i, one_less, one_more, one_less_idx, a, one_more_idx, b
+                    );
                     if one_less_idx <= a && one_more_idx < b {
                         println!("DDD minus 1");
                         round -= 1;
@@ -169,54 +196,14 @@ fn main() {
                         println!("DDD plus 1");
                         round += 1;
                     }
-                },
+                }
             };
         }
-        //let one_bigger_idx = indexes.get(&(orig_b + 1));
-        //let one_less_idx = indexes.get(&(orig_a - 1));
-        //// Add a round, we've moved a B value before its preceding N
-        //if orig_b > 1 && indexes[&(orig_b - 1)] > a {
-        //    round += 1;
-        //}
-        //if one_bigger_idx.is_some() && one_bigger_idx.unwrap() < &b && one_bigger_idx.unwrap() >= &a {
-        //    println!("AAA {}", one_bigger_idx.unwrap());
-        //    round -= 1;
-        //} else if one_bigger_idx.is_some() && one_bigger_idx.unwrap() > &a && one_bigger_idx.unwrap() <= &b {
-        //    println!("BBB {}", one_bigger_idx.unwrap());
-        //    round += 1;
-        //} else if one_less_idx.is_some() && one_less_idx.unwrap() < &b && one_less_idx.unwrap() >= &a {
-        //    println!("CCC {}", one_less_idx.unwrap());
-        //    round -= 1;
-        //} else if one_less_idx.is_some() && one_less_idx.unwrap() > &a && one_less_idx.unwrap() <= &b {
-        //    println!("DDD {}", one_less_idx.unwrap());
-        //    round += 1;
-        //};
-
-        //if a > 0 && orig_b > 1 {
-        //    if indexes[&(orig_b - 1)] > a && indexes[&(orig_b - 1)] <= b {
-        //        println!("A:Minus 1 {} > {} && {} <= {}", indexes[&(orig_b - 1)], a, indexes[&(orig_b - 1)], b);
-        //        round -= 1;
-        //} else if b < (n as i32 - 1) as usize && orig_a < n as i32 {
-        //    if indexes[&(orig_a - 1)] > a && indexes[&(orig_a - 1)] <= b {
-        //        println!("B:Minus 1 {} > {} && {} <= {}", indexes[&(orig_a - 1)], a, indexes[&(orig_a - 1)], b);
-        //        round -= 1;
-        //    }
-        //    }
-        //}
-        //// Edge case
-        //if ((a - b) as i32).abs() == 1 && new_a == new_b - 1{
-        //    round -= 1;
-        //} else if ((a - b) as i32).abs() == 1 && new_a -1 == new_b {
-        //    round += 1;
-        //} else {
-        //    println!("else");
-        //}
-        ////if a > 0 {
-        ////    if
         println!("Arr:{:?} === {}", arr, round);
 
-        indexes.insert(new_a, a);
-        indexes.insert(new_b, b);
+        // Update where our indexes are for each value
+        indexes.insert(arr[a], a);
+        indexes.insert(arr[b], b);
         println!("Indexes {:?}", indexes);
     }
 }
