@@ -23,21 +23,34 @@ fn main() {
         _ => panic!("First line not valid"),
     };
 
-    let _arr: Vec<i64> = lines
+    let mut arr: Vec<i64> = lines
         .next()
         .unwrap()
         .unwrap()
         .split_whitespace()
         .filter_map(|v| v.parse::<i64>().ok())
         .collect();
+    println!("Arr:{:?}", arr);
 
     for line in lines {
-        println!("Line {}", line.unwrap());
+        let (a, b) = match line
+            .unwrap()
+            .split_whitespace()
+            .filter_map(|v| v.parse::<usize>().ok())
+            .collect::<Vec<usize>>()[..]
+        {
+            [a, b] => (a - 1, b - 1),
+            _ => panic!("line not valid"),
+        };
+        println!("A:{} B:{}", a, b);
+        arr.swap(a, b);
+        println!("Arr:{:?}", arr);
+
+        println!("{}", collect_numbers(&arr));
     }
-    //println!("{}", cnt);
 }
 
-fn collect_numbers(arr: &Vec<i64>) -> usize {
+fn collect_numbers(arr: &[i64]) -> usize {
     let mut set: BTreeSet<i64> = BTreeSet::new();
     arr.iter()
         .map(|x| {
