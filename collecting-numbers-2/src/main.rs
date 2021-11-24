@@ -30,7 +30,7 @@ fn main() {
         .split_whitespace()
         .filter_map(|v| v.parse::<i64>().ok())
         .collect();
-    println!("Arr:{:?}", arr);
+    //println!("Arr:{:?}", arr);
 
     for line in lines {
         let (a, b) = match line
@@ -42,9 +42,9 @@ fn main() {
             [a, b] => (a - 1, b - 1),
             _ => panic!("line not valid"),
         };
-        println!("A:{} B:{}", a, b);
+        //println!("A:{} B:{}", a, b);
         arr.swap(a, b);
-        println!("Arr:{:?}", arr);
+        //println!("Arr:{:?}", arr);
 
         println!("{}", collect_numbers(&arr));
     }
