@@ -113,12 +113,12 @@ fn main() {
                     let one_more = i + 1;
                     let one_more_idx = indexes[&one_more];
                     println!("---Orig A == 1 val {} (,{}); Idx:{} < IdxB:{}", i, one_more, one_more_idx, b);
-                    if one_more_idx < b {
-                        println!("AAA minus 1");
-                        round -= 1;
-                    } else {
+                    if one_more_idx > a && one_more_idx < b {
                         println!("AAA plus 1");
                         round += 1;
+                    } else {
+                        println!("AAA minus 1");
+                        round -= 1;
                     }
                 },
                 i if i == N => {
