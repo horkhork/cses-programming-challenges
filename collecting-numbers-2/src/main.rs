@@ -1,73 +1,6 @@
 use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader};
 
-// Tests
-// cat <<EOF | cargo run
-// 5 3
-// 4 5 1 2 3
-// 2 3
-// 1 5
-// 2 4
-// EOF
-//
-// cat <<EOF | cargo run
-// 5 3
-// 4 2 1 5 3
-// 2 3
-// 1 5
-// 2 4
-// EOF
-//
-// cat <<EOF | cargo run
-// 5 3
-// 4 2 1 5 3
-// 2 3
-// 1 5
-// 2 3
-// EOF
-//
-// cat <<EOF | cargo run
-// 20 200000
-// 14 2 3 10 8 9 1 19 4 15 5 17 13 16 7 11 6 12 18 20
-// 13 13
-// 10 1
-// 12 20
-// 4 15
-// 8 6
-// EOF
-
-// 5 3
-//        4 2 1 5 3 -> 3
-// 2 3 -> 4 1 2 5 3 -> 2
-// 1 5 -> 3 1 2 5 4 -> 3
-// 2 3 -> 3 2 1 5 4 -> 4
-
-// Hypothetical cases
-//  One Change
-//        4 2 1 5 3 -> 3
-//        _   _
-// 1 3 -> 1 2 4 5 3 -> 2
-//
-//  One Change
-//        4 2 1 5 3 -> 3
-//        _     _
-// 1 4 -> 5 2 1 4 3 -> 4
-//
-//  One Change
-//        4 2 1 5 3 -> 3
-//          _   _
-// 2 4 -> 4 5 1 2 3 -> 2
-//
-//  No Change
-//        4 2 1 5 3 -> 3
-//              _ _
-// 4 5 -> 4 2 1 3 5 -> 3
-//
-//  No Change
-//            _ _
-//        4 2 1 5 3 -> 3
-// 3 4 -> 4 2 5 1 3 -> 3
-//
 fn main() {
     let input = BufReader::new(std::io::stdin());
     let mut lines = input.lines();
@@ -107,11 +40,6 @@ fn main() {
             }
         })
         .sum();
-
-    //println!("N:{}", n);
-    //println!("Arr:{:?}", arr);
-    //println!("Indexes:{:?}", indexes);
-    //println!("Initial Count:{:?}", rounds);
 
     // For each remaining line process the swap and update the rounds
     for line in lines {
@@ -163,24 +91,10 @@ fn main() {
         // Do the actual Swap
         arr.swap(a, b);
 
-        println!("{}", rounds);
-
         // Update where our indexes are for each value
         indexes.insert(arr[a], a);
         indexes.insert(arr[b], b);
-        //println!("Indexes {:?}", indexes);
+
+        println!("{}", rounds);
     }
 }
-
-//fn collect_numbers(arr: &[i32]) -> usize {
-//    let mut set: BTreeSet<i32> = BTreeSet::new();
-//    arr.iter()
-//        .map(|x| {
-//            set.insert(*x);
-//            match set.contains(&(x - 1)) {
-//                true => 0,
-//                false => 1,
-//            }
-//        })
-//        .sum()
-//}
