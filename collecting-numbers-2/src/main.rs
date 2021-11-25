@@ -72,7 +72,7 @@ fn main() {
     let input = BufReader::new(std::io::stdin());
     let mut lines = input.lines();
 
-    let (n, _m) = match lines
+    let (_n, _m) = match lines
         .next()
         .unwrap()
         .unwrap()
@@ -160,135 +160,9 @@ fn main() {
             }
         }
 
-        //// Keep track of the original values for calculations
-        //let a0 = arr[a];
-        //let b0 = arr[b];
+        // Do the actual Swap
+        arr.swap(a, b);
 
-        //println!( "\nProcessing {:?}::: IdxA:{} IdxB:{} ValA:{} ValB:{}", arr, a, b, a0, b0);
-
-        //// Do the actual Swap
-        //arr.swap(a, b);
-
-        //if b - a == 1 {
-        //    // Easy case, handle when indexes a and b are adjecent
-        //    println!("adjacent swap");
-        //    //match a0 < b0 {
-        //    //    true => rounds += 1,
-        //    //    false => rounds -= 1,
-        //    //}
-        //    indexes = BTreeMap::new();
-        //    rounds = arr
-        //        .iter()
-        //        .enumerate()
-        //        .map(|(i, x)| {
-        //            indexes.insert(*x, i);
-        //            match indexes.contains_key(&(x - 1)) {
-        //                true => 0,
-        //                false => 1,
-        //            }
-        //        })
-        //        .sum();
-        //} else {
-        //    // Handle the case when the values for a and b are monotonic neighbors
-        //    rounds += if (a0 - b0).abs() == 1 {
-        //        println!("monotonic neighbor swap");
-        //        match a0 < b0 {
-        //            true => 1,
-        //            false => -1,
-        //        }
-        //    } else {
-        //        0
-        //    };
-        //    rounds += match a0 {
-        //        // Original A value == 1
-        //        x if x == 1 => {
-        //            let one_more = x + 1;
-        //            let one_more_idx = indexes[&one_more];
-        //            println!( "---Orig A == 1 val {} (,{}); Idx:{} < IdxB:{}", x, one_more, one_more_idx, b);
-        //            if one_more_idx > a && one_more_idx < b {
-        //                println!("AAA plus 1");
-        //                1
-        //            } else {
-        //                println!("AAA zero");
-        //                0
-        //            }
-        //        }
-        //        // Original A value == N
-        //        x if x == n => {
-        //            let one_less = x - 1;
-        //            let one_less_idx = indexes[&one_less];
-        //            println!( "---Orig A END val {} (,{}); Idx:{} < IdxB:{}", x, one_less, one_less_idx, b);
-        //            if one_less_idx > a && one_less_idx < b {
-        //                println!("EEE plus 1");
-        //                -1
-        //            } else {
-        //                0
-        //            }
-        //        }
-        //        // Original A value in the middle 1 < x < N
-        //        x => {
-        //            let one_less = x - 1;
-        //            let one_less_idx = indexes[&one_less];
-        //            let one_more = x + 1;
-        //            let one_more_idx = indexes[&one_more];
-        //            println!( "Orig A middle val {} ({},{}); -idx:{} > a:{} && +idx:{} < b:{}", x, one_less, one_more, one_less_idx, a, one_less_idx, b);
-        //            if one_less_idx > a && one_less_idx < b {
-        //                println!("BBB minus 1");
-        //                -1
-        //            } else if one_more_idx > a && one_more_idx < b {
-        //                println!("BBB minus 1");
-        //                1
-        //            } else {
-        //                println!("BBB zero");
-        //                0
-        //            }
-        //        }
-        //    };
-        //    rounds += match b0 {
-        //        // Original B value == 1
-        //        x if x == 1 => {
-        //            println!("Orig B == 1");
-        //            let one_more = x + 1;
-        //            let one_more_idx = indexes[&one_more];
-        //            println!( "---Orig B middle val {} (,{}); {} > {}", x, one_more, one_more_idx, a);
-        //            if one_more_idx > a && one_more_idx < b{
-        //                println!("CCC plus 1");
-        //                -1
-        //            } else {
-        //                println!("CCC zero");
-        //                0
-        //            }
-        //        }
-        //        // Original B value == N
-        //        x if x == n => {
-        //            let one_less = x - 1;
-        //            let one_less_idx = indexes[&one_less];
-        //            println!( "---Orig B END val {} (,{}); Idx:{} < IdxB:{}", x, one_less, one_less_idx, b);
-        //            if one_less_idx > a && one_less_idx < b {
-        //                println!("FFF plus 1");
-        //                1
-        //            } else {
-        //                0
-        //            }
-        //        }
-        //        // Original A value in the middle 1 < x < N
-        //        x => {
-        //            let one_less = x - 1;
-        //            let one_less_idx = indexes[&one_less];
-        //            let one_more = x + 1;
-        //            let one_more_idx = indexes[&one_more];
-        //            println!( "Orig B middle val {} ({},{}); -idx:{} <= a:{} && +idx:{} < b:{}", x, one_less, one_more, one_less_idx, a, one_more_idx, b);
-        //            if one_less_idx > a && one_less_idx < b {
-        //                1
-        //            } else if one_more_idx > a && one_more_idx < b {
-        //                -1
-        //            } else {
-        //                0
-        //            }
-        //        }
-        //    };
-        //}
-        //println!("Arr:{:?} === {}", arr, rounds);
         println!("{}", rounds);
 
         // Update where our indexes are for each value
