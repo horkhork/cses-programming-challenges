@@ -59,24 +59,20 @@ fn main() {
             _ => panic!("line not valid"),
         };
 
-        if let Some(&i) = indexes.get(&(arr[a] - 1)) {
-            if a < i && i <= b {
-                rounds -= 1;
-            }
-        }
-        if let Some(&i) = indexes.get(&(arr[a] + 1)) {
-            if a < i && i <= b {
-                rounds += 1;
-            }
-        }
-        if let Some(&i) = indexes.get(&(arr[b] - 1)) {
-            if a < i && i <= b {
-                rounds += 1;
-            }
-        }
-        if let Some(&i) = indexes.get(&(arr[b] + 1)) {
-            if a < i && i <= b {
-                rounds -= 1;
+        // For each swap (the values at indexes a and b), look at the values in
+        // the range a < i <= b and the directly-adjacent values to the values
+        // at a and b. If we're changing and ordering, update the rounds count.
+        let index_increments = vec![
+            (arr[a] - 1, -1),
+            (arr[a] + 1, 1),
+            (arr[b] - 1, 1),
+            (arr[b] + 1, -1)
+        ];
+        for (idx, incr) in index_increments {
+            if let Some(&i) = indexes.get(&idx) {
+                if a < i && i <= b {
+                    rounds += incr;
+                }
             }
         }
 
