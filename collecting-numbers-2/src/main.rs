@@ -5,6 +5,7 @@ fn main() {
     let input = BufReader::new(std::io::stdin());
     let mut lines = input.lines();
 
+    // Parse the first line, unused
     let (_n, _m) = match lines
         .next()
         .unwrap()
@@ -58,31 +59,22 @@ fn main() {
             _ => panic!("line not valid"),
         };
 
-        let a_minus_1 = arr[a] - 1;
-        let a_minus_1_idx = indexes.get(&a_minus_1);
-        let a_plus_1 = arr[a] + 1;
-        let a_plus_1_idx = indexes.get(&a_plus_1);
-        let b_minus_1 = arr[b] - 1;
-        let b_minus_1_idx = indexes.get(&b_minus_1);
-        let b_plus_1 = arr[b] + 1;
-        let b_plus_1_idx = indexes.get(&b_plus_1);
-
-        if let Some(&i) = a_minus_1_idx {
+        if let Some(&i) = indexes.get(&(arr[a] - 1)) {
             if a < i && i <= b {
                 rounds -= 1;
             }
         }
-        if let Some(&i) = a_plus_1_idx {
+        if let Some(&i) = indexes.get(&(arr[a] + 1)) {
             if a < i && i <= b {
                 rounds += 1;
             }
         }
-        if let Some(&i) = b_minus_1_idx {
+        if let Some(&i) = indexes.get(&(arr[b] - 1)) {
             if a < i && i <= b {
                 rounds += 1;
             }
         }
-        if let Some(&i) = b_plus_1_idx {
+        if let Some(&i) = indexes.get(&(arr[b] + 1)) {
             if a < i && i <= b {
                 rounds -= 1;
             }
