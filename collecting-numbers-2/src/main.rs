@@ -108,10 +108,10 @@ fn main() {
         })
         .sum();
 
-    println!("N:{}", n);
-    println!("Arr:{:?}", arr);
-    println!("Indexes:{:?}", indexes);
-    println!("Initial Count:{:?}", rounds);
+    //println!("N:{}", n);
+    //println!("Arr:{:?}", arr);
+    //println!("Indexes:{:?}", indexes);
+    //println!("Initial Count:{:?}", rounds);
 
     // For each remaining line process the swap and update the rounds
     for line in lines {
@@ -140,22 +140,22 @@ fn main() {
         let b_plus_1_idx = indexes.get(&b_plus_1);
 
         if let Some(&i) = a_minus_1_idx {
-            if a <= i && i <= b {
+            if a < i && i <= b {
                 rounds -= 1;
             }
         }
         if let Some(&i) = a_plus_1_idx {
-            if a <= i && i <= b {
+            if a < i && i <= b {
                 rounds += 1;
             }
         }
         if let Some(&i) = b_minus_1_idx {
-            if a <= i && i <= b {
+            if a < i && i <= b {
                 rounds += 1;
             }
         }
         if let Some(&i) = b_plus_1_idx {
-            if a <= i && i <= b {
+            if a < i && i <= b {
                 rounds -= 1;
             }
         }
@@ -288,7 +288,7 @@ fn main() {
         //        }
         //    };
         //}
-        println!("Arr:{:?} === {}", arr, rounds);
+        //println!("Arr:{:?} === {}", arr, rounds);
         println!("{}", rounds);
 
         // Update where our indexes are for each value
