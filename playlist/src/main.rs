@@ -22,6 +22,7 @@ fn main() {
     // Keep track of each number in the array and it's most recent index in the list
     let mut indexes: BTreeMap<i32, usize> = BTreeMap::new();
 
+    let mut lb = 0;
     let mut max = 1;
     // Parse the array of numbers
     let mut it: i32 = lines
@@ -30,13 +31,15 @@ fn main() {
         .unwrap()
         .split_whitespace()
         .filter_map(|v| v.parse::<i32>().ok())
-        .inspect(|v| println!("v{:?}", v))
+        //.inspect(|v| println!("v{:?}", v))
         .fold(1, |i, v| {
-            println!("i{}", i);
+            //println!("i{}", i);
             if let Some(x) = indexes.get(&v) {
-                println!("Some: {}@{}", v, x);
+                //println!("Some: {}@{}", v, x);
+                lb += 1;
             } else {
-                println!("Not some");
+                //println!("Not some");
+                println!("range {}-{}={}", i, lb, i-lb);
             };
             indexes.insert(v, i as usize);
             i + 1
