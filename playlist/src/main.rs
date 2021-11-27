@@ -31,14 +31,16 @@ fn main() {
         .unwrap()
         .split_whitespace()
         .filter_map(|v| v.parse::<i32>().ok())
-        //.inspect(|v| println!("v{:?}", v))
-        .fold((0, 1, 0), |(mut lb, ub, mut max), v| {
-            //println!("i{}", i);
+        .inspect(|v| println!("v{:?}", v))
+        .enumerate()
+        .fold((0, 1, 0), |(mut lb, ub, mut max), (i, v)| {
             if indexes.contains_key(&v) {
-                lb += 1;
+                //lb += 1;
+                lb = i as i32;
+                println!("lb incr {} i {}", lb, i);
             } else {
                 max = cmp::max(max, ub - lb);
-                //println!("range {}-{}={}", i, lb, i-lb);
+                println!("range {}-{}={}", ub, lb, ub-lb);
             };
             indexes.insert(v, ub as usize);
             (lb, ub + 1, max)
