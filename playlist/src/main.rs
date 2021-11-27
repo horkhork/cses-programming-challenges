@@ -34,9 +34,9 @@ fn main() {
         .inspect(|v| println!("v{:?}", v))
         .enumerate()
         .fold((0, 1, 0), |(mut lb, ub, mut max), (i, v)| {
-            if indexes.contains_key(&v) {
+            if let Some(i) = indexes.get(&v) {
                 //lb += 1;
-                lb = i as i32;
+                lb = *i as i32;
                 println!("lb incr {} i {}", lb, i);
             } else {
                 max = cmp::max(max, ub - lb);
