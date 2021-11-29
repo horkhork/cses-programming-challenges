@@ -40,28 +40,33 @@ fn main() {
         _ => panic!("First line not valid"),
     };
 
-    // Keep track of each number in the array and it's most recent index in the list
-    let mut towers: BTreeMap<i32, usize> = BTreeMap::new();
-
     // Parse the array of numbers
-    let _: Vec<i32> = lines
+    let towers: BTreeMap<usize, usize> = lines
         .next()
         .unwrap()
         .unwrap()
         .split_whitespace()
-        .filter_map(|v| v.parse::<i32>().ok())
-        .inspect(|v| debugln!("v{:?}", v))
-        .map(|i| match towers.range(i..i32::MAX).next() {
+        .filter_map(|v| v.parse::<usize>().ok())
+        //.inspect(|v| debugln!("v{:?}", v))
+        .fold(BTreeMap::new(), |mut towers, i| match towers.range(i..usize::MAX).next() {
             Some((&k, &v)) => {
-                debugln!("found tower for '{}' with prev '{}' and count {}", i, k, v);
-                0
+                debug!("found tower for '{}' with prev '{}' and count {}; ", i, k, v);
+                if v == 1 {
+                    debugln!("Remove '{}'", k);
+                    towers.remove(&k);
+                } else {
+                    debugln!("Decr '{}' {}", k, v - 1);
+                    towers.insert(k, v - 1);
+                }
+                *towers.entry(i).or_insert(0) += 1;
+                towers
             },
             None => {
                 debugln!("new tower starting at {}", i);
                 *towers.entry(i).or_insert(0) += 1;
-                1
+                towers
             }
-        })
-        .collect();
+        });
     debugln!("{:?}", towers);
+    println!("{}", towers.keys().len());
 }
