@@ -23,30 +23,37 @@ fn main() {
         acc.insert(n - 1, n);
         acc
     });
-    dbg!(&children);
+    //dbg!(&children);
     let mut idx = k % n;
-    dbg!(n);
-    dbg!(k);
-    dbg!(idx);
+    //dbg!(n);
+    //dbg!(k);
+    //dbg!(idx);
     let mut len = n;
+    let mut prevlen = n - 1;
     while let Some(child) = children.remove(&idx) {
-        children = children
-            .values()
-            .enumerate()
-            .fold(BTreeMap::new(), |mut acc, (i, n)| {
-                acc.insert(i, *n);
-                acc
-            });
-
-        dbg!(child);
-        dbg!(&children);
         print!("{} ", child);
         len -= 1;
-        dbg!(len);
-        idx = if len == 0 { 0 } else { (idx + k) % len };
 
-        dbg!(k);
-        dbg!(idx);
+        //dbg!(child);
+        //dbg!(len);
+        idx = if len == 0 { 0 } else { idx + k };
+        if idx > len {
+            //println!("WRAP IDX:{} LEN:{}", idx, len);
+            idx = idx % prevlen;
+            children = children
+                .values()
+                .enumerate()
+                .fold(BTreeMap::new(), |mut acc, (i, n)| {
+                    acc.insert(i, *n);
+                    acc
+                });
+            prevlen = children.len() - 1;
+        //dbg!(&children);
+        } else {
+            idx += 1;
+        }
+
+        //dbg!(idx);
     }
     println!();
 }
