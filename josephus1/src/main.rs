@@ -1,27 +1,6 @@
-use std::collections::BTreeSet;
+use indexmap::IndexSet;
 use std::io::{BufRead, BufReader};
 
-
-#[allow(unused_macros)]
-#[cfg(feature = "debug")]
-macro_rules! debugln {
-    ($( $args:expr ),*) => { println!( $( $args ),* ) }
-}
-#[allow(unused_macros)]
-#[cfg(feature = "debug")]
-macro_rules! debug {
-    ($( $args:expr ),*) => { print!( $( $args ),* ) }
-}
-#[allow(unused_macros)]
-#[cfg(not(feature = "debug"))]
-macro_rules! debugln {
-    ($( $args:expr ),*) => {};
-}
-#[allow(unused_macros)]
-#[cfg(not(feature = "debug"))]
-macro_rules! debug {
-    ($( $args:expr ),*) => {};
-}
 
 fn main() {
     let input = BufReader::new(std::io::stdin());
@@ -41,17 +20,14 @@ fn main() {
         _ => panic!("First line not valid"),
     };
 
-    let mut children: BTreeSet<usize> = (1..=n).collect();
-    let mut i: usize = 1;
-    while !children.is_empty() {
-        let mut tmp = children.clone();
-        for c in children {
-            if i % k == 0 {
-                print!("{} ", c);
-                tmp.remove(&c);
-            }
-            i += 1;
-        }
-        children = tmp;
+    let mut children: IndexSet<_> = (1..=n).collect();
+    let mut idx = k % n;
+    dbg!(k);
+    dbg!(idx);
+    while let Some(c) = children.swap_take(&idx) {
+        dbg!(c);
+        idx = (idx + k) % n;
+        dbg!(k);
+        dbg!(idx);
     }
 }
