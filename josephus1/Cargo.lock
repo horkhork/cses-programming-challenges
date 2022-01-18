@@ -29,11 +29,4 @@ name = "josephus1"
 version = "0.1.0"
 dependencies = [
  "indexmap",
- "ordermap",
 ]
-
-[[package]]
-name = "ordermap"
-version = "0.4.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "91409674c628d07a6b4b79cc877c6b63ba5ccbfbadddd77ca822f55069ed1bd4"

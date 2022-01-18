@@ -1,7 +1,6 @@
 use indexmap::IndexSet;
 use std::io::{BufRead, BufReader};
 
-
 fn main() {
     let input = BufReader::new(std::io::stdin());
     let mut lines = input.lines();
@@ -15,19 +14,26 @@ fn main() {
         .filter_map(|v| v.parse::<usize>().ok())
         .collect::<Vec<usize>>()[..]
     {
-        [n, k] => (n, k + 1),
+        [n, k] => (n, k),
         [n] => (n, 2),
         _ => panic!("First line not valid"),
     };
 
     let mut children: IndexSet<_> = (1..=n).collect();
+    dbg!(&children);
     let mut idx = k % n;
+    dbg!(n);
     dbg!(k);
     dbg!(idx);
-    while let Some(c) = children.swap_take(&idx) {
-        dbg!(c);
-        idx = (idx + k) % n;
+    while let Some(child) = children.swap_remove_index(idx) {
+        dbg!(child);
+        print!("{} ", child);
+        let len = children.len();
+        dbg!(len);
+        idx = if len == 0 { 0 } else { (idx + k) % len };
+
         dbg!(k);
         dbg!(idx);
     }
+    println!();
 }
