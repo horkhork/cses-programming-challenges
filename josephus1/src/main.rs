@@ -1,4 +1,4 @@
-use indexmap::IndexSet;
+use std::collections::BTreeMap;
 use std::io::{BufRead, BufReader};
 
 fn main() {
@@ -19,16 +19,29 @@ fn main() {
         _ => panic!("First line not valid"),
     };
 
-    let mut children: IndexSet<_> = (1..=n).collect();
+    let mut children: BTreeMap<_, _> = (1..=n).fold(BTreeMap::new(), |mut acc, n| {
+        acc.insert(n - 1, n);
+        acc
+    });
     dbg!(&children);
     let mut idx = k % n;
     dbg!(n);
     dbg!(k);
     dbg!(idx);
-    while let Some(child) = children.swap_remove_index(idx) {
+    let mut len = n;
+    while let Some(child) = children.remove(&idx) {
+        children = children
+            .values()
+            .enumerate()
+            .fold(BTreeMap::new(), |mut acc, (i, n)| {
+                acc.insert(i, *n);
+                acc
+            });
+
         dbg!(child);
+        dbg!(&children);
         print!("{} ", child);
-        let len = children.len();
+        len -= 1;
         dbg!(len);
         idx = if len == 0 { 0 } else { (idx + k) % len };
 
