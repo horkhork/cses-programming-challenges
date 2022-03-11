@@ -23,22 +23,22 @@ fn main() {
         acc.insert(n - 1, n);
         acc
     });
-    //dbg!(&children);
+    dbg!(&children);
     let mut idx = k % n;
-    //dbg!(n);
-    //dbg!(k);
-    //dbg!(idx);
+    dbg!(n);
+    dbg!(k);
+    dbg!(idx);
     let mut len = n;
     let mut prevlen = n - 1;
     while let Some(child) = children.remove(&idx) {
         print!("{} ", child);
         len -= 1;
 
-        //dbg!(child);
-        //dbg!(len);
+        dbg!(child);
+        dbg!(len);
         idx = if len == 0 { 0 } else { idx + k };
         if idx > len {
-            //println!("WRAP IDX:{} LEN:{}", idx, len);
+            println!("WRAP IDX:{} LEN:{}", idx, len);
             idx = idx % prevlen;
             children = children
                 .values()
@@ -48,12 +48,12 @@ fn main() {
                     acc
                 });
             prevlen = children.len() - 1;
-        //dbg!(&children);
+        dbg!(&children);
         } else {
             idx += 1;
         }
 
-        //dbg!(idx);
+        dbg!(idx);
     }
     println!();
 }
